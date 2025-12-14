@@ -3,28 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <title>Galex Premium - Music Player</title>
-<link rel="icon" href="logo.png" type="image/png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
     --galex-blue: #1d51b9;
     --galex-light-blue: #1eafd7;
-    --galex-dark: #121212;
-    --galex-card: #181818;
-    --galex-gray: #b3b3b3;
-    --galex-light-gray: #282828;
+    --galex-purple: #8a2be2;
+    --galex-dark: #0a0a0f;
+    --galex-card: #141420;
+    --galex-gray: #a0a0c0;
+    --galex-light-gray: #2a2a3a;
     --galex-white: #ffffff;
-    --transition-speed: 0.3s;
-    --border-radius: 8px;
-    --player-height: 90px;
-    --sidebar-width: 280px;
+    --galex-gradient: linear-gradient(135deg, var(--galex-blue), var(--galex-purple));
+    --transition-speed: 0.4s;
+    --border-radius: 16px;
+    --border-radius-lg: 24px;
+    --border-radius-sm: 12px;
+    --player-height: 100px;
+    --sidebar-width: 300px;
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.2);
+    --shadow-sm: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Circular', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
 }
 
 body {
@@ -32,107 +39,184 @@ body {
     color: var(--galex-white);
     height: 100vh;
     overflow: hidden;
+    font-weight: 400;
 }
 
-/* Background Effects */
-.background-gradient {
+/* Animated Background */
+.animated-background {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(180deg, #121212 0%, #1a1a1a 100%);
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(29, 81, 185, 0.15) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(138, 43, 226, 0.1) 0%, transparent 20%),
+        linear-gradient(180deg, #0a0a0f 0%, #151522 100%);
     z-index: -2;
+    animation: gradientShift 20s ease infinite alternate;
 }
 
-.background-pattern {
+@keyframes gradientShift {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+}
+
+.background-particles {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: 
-        radial-gradient(circle at 20% 80%, rgba(29, 81, 185, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(30, 175, 215, 0.05) 0%, transparent 50%);
     z-index: -1;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    background: var(--galex-blue);
+    border-radius: 50%;
+    opacity: 0.1;
+    animation: float 15s infinite linear;
+}
+
+.particle:nth-child(odd) {
+    background: var(--galex-purple);
+}
+
+@keyframes float {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-100vh) rotate(360deg); }
 }
 
 /* Layout */
 .app-container {
     display: flex;
     height: 100vh;
-    gap: 1px;
+    gap: 2px;
+    padding: 20px;
+    background: transparent;
 }
 
-/* Sidebar */
+/* Enhanced Sidebar */
 .sidebar {
     width: var(--sidebar-width);
-    background: var(--galex-dark);
+    background: rgba(20, 20, 32, 0.85);
+    backdrop-filter: blur(20px);
+    border-radius: var(--border-radius-lg);
     display: flex;
     flex-direction: column;
-    padding: 24px 12px;
-    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 28px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: var(--shadow-lg);
+    z-index: 10;
 }
 
 .logo {
-    padding: 0 12px 24px;
+    padding: 0 16px 32px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
+    transition: transform var(--transition-speed) ease;
+}
+
+.logo:hover {
+    transform: scale(1.02);
 }
 
 .logo-icon {
-    font-size: 32px;
-    color: var(--galex-blue);
+    font-size: 40px;
+    background: var(--galex-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
     font-weight: 900;
+    filter: drop-shadow(0 4px 8px rgba(29, 81, 185, 0.3));
+    animation: logoPulse 3s ease-in-out infinite;
+}
+
+@keyframes logoPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
 }
 
 .logo-text {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: 900;
-    letter-spacing: -1.5px;
-    background: linear-gradient(45deg, var(--galex-blue), var(--galex-light-blue));
+    letter-spacing: -1.2px;
+    background: var(--galex-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    text-shadow: 0 4px 12px rgba(29, 81, 185, 0.4);
 }
 
 .nav-section {
-    margin-bottom: 32px;
+    margin-bottom: 40px;
 }
 
 .nav-menu {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 8px;
 }
 
 .nav-item {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 12px;
-    border-radius: 6px;
+    gap: 18px;
+    padding: 16px 20px;
+    border-radius: var(--border-radius);
     cursor: pointer;
-    transition: all var(--transition-speed) ease;
+    transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
     color: var(--galex-gray);
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--galex-gradient);
+    transform: scaleY(0);
+    transition: transform var(--transition-speed) ease;
 }
 
 .nav-item:hover {
     background: rgba(255, 255, 255, 0.05);
     color: var(--galex-white);
+    padding-left: 28px;
+    transform: translateX(5px);
+}
+
+.nav-item:hover::before {
+    transform: scaleY(1);
 }
 
 .nav-item.active {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
     color: var(--galex-white);
+    padding-left: 28px;
+}
+
+.nav-item.active::before {
+    transform: scaleY(1);
 }
 
 .nav-icon {
-    font-size: 20px;
-    width: 24px;
+    font-size: 22px;
+    width: 28px;
     text-align: center;
+    transition: transform var(--transition-speed) ease;
+}
+
+.nav-item:hover .nav-icon {
+    transform: scale(1.2);
 }
 
 .main-content {
@@ -140,15 +224,21 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    background: rgba(20, 20, 32, 0.85);
+    backdrop-filter: blur(20px);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: var(--shadow-lg);
 }
 
+/* Enhanced Top Bar */
 .top-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 32px;
-    background: rgba(0, 0, 0, 0.3);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 24px 40px;
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .nav-controls {
@@ -157,77 +247,119 @@ body {
 }
 
 .nav-btn {
-    width: 32px;
-    height: 32px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.5);
-    border: none;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--galex-white);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all var(--transition-speed) ease;
+    transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 18px;
 }
 
 .nav-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: scale(1.1);
+    background: var(--galex-gradient);
+    transform: translateY(-2px) scale(1.1);
+    box-shadow: var(--shadow-md);
 }
 
 .search-container {
     position: relative;
-    width: 300px;
+    width: 360px;
 }
 
 .search-input {
     width: 100%;
-    padding: 10px 20px 10px 44px;
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
+    padding: 14px 20px 14px 56px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 50px;
     color: var(--galex-white);
-    font-size: 14px;
+    font-size: 15px;
     outline: none;
+    transition: all var(--transition-speed) ease;
+}
+
+.search-input:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--galex-blue);
+    box-shadow: 0 0 0 3px rgba(29, 81, 185, 0.2);
 }
 
 .search-icon {
     position: absolute;
-    left: 16px;
+    left: 20px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--galex-gray);
-    font-size: 14px;
+    font-size: 16px;
+    transition: color var(--transition-speed) ease;
+}
+
+.search-input:focus + .search-icon {
+    color: var(--galex-blue);
 }
 
 .user-profile {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 6px 12px 6px 6px;
-    background: rgba(0, 0, 0, 0.5);
+    gap: 14px;
+    padding: 10px 20px 10px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 50px;
     cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+
+.user-profile:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
 }
 
 .user-avatar {
-    width: 32px;
-    height: 32px;
-    background: linear-gradient(135deg, var(--galex-blue), var(--galex-light-blue));
+    width: 40px;
+    height: 40px;
+    background: var(--galex-gradient);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 16px;
     color: var(--galex-white);
+    transition: transform var(--transition-speed) ease;
 }
 
-/* Now Playing Section */
+.user-profile:hover .user-avatar {
+    transform: rotate(15deg) scale(1.1);
+}
+
+/* Enhanced Now Playing Section */
 .now-playing {
     flex: 1;
     padding: 40px;
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--galex-blue) transparent;
+}
+
+.now-playing::-webkit-scrollbar {
+    width: 8px;
+}
+
+.now-playing::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.now-playing::-webkit-scrollbar-thumb {
+    background: var(--galex-blue);
+    border-radius: 4px;
 }
 
 .now-playing-header {
@@ -238,128 +370,183 @@ body {
 }
 
 .now-playing-header h2 {
-    font-size: 32px;
+    font-size: 36px;
     font-weight: 900;
+    background: var(--galex-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
 .album-info {
     display: flex;
     align-items: flex-start;
-    gap: 40px;
-    margin-bottom: 40px;
+    gap: 50px;
+    margin-bottom: 50px;
 }
 
 .album-art-container {
     position: relative;
-    width: 320px;
-    height: 320px;
-    border-radius: 50%;
+    width: 360px;
+    height: 360px;
+    border-radius: var(--border-radius-lg);
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    border: 4px solid var(--galex-blue);
+    box-shadow: var(--shadow-lg);
+    border: 4px solid transparent;
+    background: var(--galex-gradient) border-box;
+    animation: borderGlow 3s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+    0%, 100% { box-shadow: 0 0 30px rgba(29, 81, 185, 0.5), var(--shadow-lg); }
+    50% { box-shadow: 0 0 50px rgba(29, 81, 185, 0.8), var(--shadow-lg); }
 }
 
 .album-art {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 50%;
+    border-radius: calc(var(--border-radius-lg) - 4px);
+    transition: transform var(--transition-speed) ease;
+}
+
+.album-art:hover {
+    transform: scale(1.02);
 }
 
 .album-details {
     flex: 1;
+    padding-top: 20px;
 }
 
 .album-title {
-    font-size: 72px;
+    font-size: 80px;
     font-weight: 900;
     line-height: 1;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, #ffffff 0%, #a0a0c0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .album-stats {
     display: flex;
-    gap: 32px;
-    margin-bottom: 32px;
+    gap: 40px;
+    margin-bottom: 40px;
 }
 
 .stat-item {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
 }
 
 .stat-label {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--galex-gray);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .stat-value {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 700;
     color: var(--galex-white);
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-/* Playback Controls */
+/* Enhanced Playback Controls */
 .playback-controls {
-    padding: 20px 32px;
-    background: linear-gradient(to bottom, transparent, rgba(18, 18, 18, 0.9) 20%);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 24px 40px;
+    background: linear-gradient(to bottom, transparent, rgba(10, 10, 15, 0.95) 30%);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .progress-container {
     display: flex;
     align-items: center;
-    gap: 16px;
-    margin-bottom: 20px;
+    gap: 20px;
+    margin-bottom: 24px;
 }
 
 .time-stamp {
-    font-size: 14px;
+    font-size: 15px;
     color: var(--galex-gray);
-    min-width: 40px;
+    min-width: 50px;
+    font-weight: 500;
 }
 
 .progress-bar {
     flex: 1;
-    height: 4px;
+    height: 6px;
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 2px;
+    border-radius: 3px;
     position: relative;
     cursor: pointer;
     overflow: hidden;
+    transition: height var(--transition-speed) ease;
+}
+
+.progress-bar:hover {
+    height: 8px;
 }
 
 .progress-fill {
     position: absolute;
     height: 100%;
-    background: var(--galex-blue);
-    border-radius: 2px;
+    background: var(--galex-gradient);
+    border-radius: 3px;
     width: 0%;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 10px rgba(29, 81, 185, 0.5);
+}
+
+.progress-handle {
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background: var(--galex-white);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+    box-shadow: 0 0 10px rgba(29, 81, 185, 0.8);
+}
+
+.progress-bar:hover .progress-handle {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.2);
 }
 
 .controls-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 20px;
+    gap: 24px;
 }
 
 .controls-center {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 32px;
 }
 
 .control-btn {
-    background: none;
-    border: none;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--galex-gray);
     cursor: pointer;
-    font-size: 18px;
-    transition: all var(--transition-speed) ease;
-    width: 32px;
-    height: 32px;
+    font-size: 20px;
+    transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -367,129 +554,190 @@ body {
 }
 
 .control-btn:hover {
+    background: var(--galex-gradient);
     color: var(--galex-white);
-    transform: scale(1.1);
+    transform: translateY(-2px) scale(1.1);
+    box-shadow: var(--shadow-md);
 }
 
 .control-btn.play-pause {
-    width: 48px;
-    height: 48px;
-    background: var(--galex-blue);
+    width: 64px;
+    height: 64px;
+    background: var(--galex-gradient);
     color: var(--galex-white);
     border-radius: 50%;
-    font-size: 20px;
+    font-size: 24px;
+    box-shadow: var(--shadow-md);
 }
 
 .control-btn.play-pause:hover {
-    transform: scale(1.05);
-    background: var(--galex-light-blue);
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 15px 40px rgba(29, 81, 185, 0.4);
 }
 
-/* Playlist */
+/* Enhanced Playlist */
 .playlist-section {
-    padding: 0 32px 32px;
+    padding: 0 40px 40px;
 }
 
 .playlist-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
 }
 
 .playlist-header h3 {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 900;
+    background: var(--galex-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .sort-options {
     display: flex;
-    gap: 8px;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 6px;
+    border-radius: var(--border-radius);
 }
 
 .sort-btn {
-    padding: 6px 12px;
-    background: rgba(255, 255, 255, 0.1);
+    padding: 10px 20px;
+    background: transparent;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     color: var(--galex-gray);
-    font-size: 12px;
+    font-size: 14px;
     cursor: pointer;
     transition: all var(--transition-speed) ease;
+    font-weight: 500;
 }
 
 .sort-btn:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.1);
     color: var(--galex-white);
+    transform: translateY(-1px);
 }
 
 .sort-btn.active {
-    background: var(--galex-blue);
+    background: var(--galex-gradient);
     color: var(--galex-white);
     font-weight: 600;
+    box-shadow: var(--shadow-sm);
 }
 
 .playlist-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 .playlist-table th {
     text-align: left;
-    padding: 12px 16px;
-    font-size: 12px;
+    padding: 18px 20px;
+    font-size: 13px;
     color: var(--galex-gray);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    font-weight: 400;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.playlist-table th:first-child {
+    border-radius: var(--border-radius-sm) 0 0 0;
+}
+
+.playlist-table th:last-child {
+    border-radius: 0 var(--border-radius-sm) 0 0;
 }
 
 .playlist-table td {
-    padding: 12px 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-    transition: background var(--transition-speed) ease;
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all var(--transition-speed) ease;
 }
 
 .playlist-table tr {
     cursor: pointer;
+    position: relative;
 }
 
-.playlist-table tr:hover {
-    background: rgba(255, 255, 255, 0.05);
+.playlist-table tr::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--galex-gradient);
+    opacity: 0;
+    transition: opacity var(--transition-speed) ease;
+    z-index: -1;
+    border-radius: var(--border-radius-sm);
+}
+
+.playlist-table tr:hover::before {
+    opacity: 0.05;
+}
+
+.playlist-table tr:hover td {
+    transform: translateX(5px);
 }
 
 .playlist-table tr.active {
     background: rgba(29, 81, 185, 0.1);
 }
 
+.playlist-table tr.active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--galex-gradient);
+    border-radius: 2px;
+}
+
 .track-number {
-    width: 40px;
+    width: 50px;
     text-align: center;
-    font-size: 14px;
+    font-size: 16px;
     color: var(--galex-gray);
+    font-weight: 600;
 }
 
 .track-title {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
 }
 
 .track-image {
-    width: 40px;
-    height: 40px;
-    border-radius: 4px;
+    width: 50px;
+    height: 50px;
+    border-radius: var(--border-radius-sm);
     object-fit: cover;
+    transition: transform var(--transition-speed) ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.playlist-table tr:hover .track-image {
+    transform: scale(1.05) rotate(2deg);
 }
 
 .track-info {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
 }
 
 .track-name {
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .track-artist {
@@ -506,16 +754,18 @@ body {
     width: 80px;
     font-size: 14px;
     color: var(--galex-gray);
+    font-weight: 500;
 }
 
 .track-duration {
     width: 60px;
     font-size: 14px;
     color: var(--galex-gray);
+    font-weight: 500;
 }
 
 .track-actions {
-    width: 40px;
+    width: 50px;
     text-align: center;
 }
 
@@ -524,40 +774,88 @@ body {
     border: none;
     color: var(--galex-gray);
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
     transition: all var(--transition-speed) ease;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
 }
 
 .action-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
     color: var(--galex-blue);
+    transform: scale(1.1);
 }
 
-/* Animation for album art rotation */
+/* Album Rotation Animation */
 @keyframes albumRotate {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
 
 .album-art.playing {
-    animation: albumRotate 20s linear infinite;
+    animation: albumRotate 30s linear infinite;
 }
 
-/* Toast Notification */
+/* Enhanced Wave Animation */
+.wave-animation {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 24px;
+}
+
+.wave-bar {
+    width: 4px;
+    height: 100%;
+    background: var(--galex-gradient);
+    border-radius: 4px;
+    animation: wave 1.2s ease-in-out infinite;
+    transform-origin: bottom;
+}
+
+.wave-bar:nth-child(2) { animation-delay: -1.1s; }
+.wave-bar:nth-child(3) { animation-delay: -1.0s; }
+.wave-bar:nth-child(4) { animation-delay: -0.9s; }
+.wave-bar:nth-child(5) { animation-delay: -0.8s; }
+
+@keyframes wave {
+    0%, 100% { transform: scaleY(0.3); }
+    50% { transform: scaleY(1); }
+}
+
+/* Enhanced Toast Notification */
 .toast {
     position: fixed;
-    bottom: 100px;
+    bottom: 120px;
     left: 50%;
     transform: translateX(-50%) translateY(100px);
-    background: var(--galex-blue);
+    background: var(--galex-gradient);
     color: var(--galex-white);
-    padding: 12px 24px;
-    border-radius: 8px;
+    padding: 16px 28px;
+    border-radius: var(--border-radius);
     font-weight: 600;
-    font-size: 14px;
-    z-index: 1000;
+    font-size: 15px;
+    z-index: 10000;
     opacity: 0;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 400px;
+}
+
+.toast::before {
+    content: '\f0e0';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 18px;
 }
 
 .toast.show {
@@ -565,22 +863,107 @@ body {
     transform: translateX(-50%) translateY(0);
 }
 
+.toast.success {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.toast.error {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
 /* Spotify Badge */
 .spotify-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     background: #1DB954;
     color: white;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 10px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
     font-weight: 700;
-    margin-left: 8px;
+    margin-left: 10px;
     vertical-align: middle;
+    box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+    animation: badgePulse 2s ease-in-out infinite;
 }
 
-/* Responsive */
+@keyframes badgePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Loading Animation */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--galex-dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    transition: opacity 0.5s ease;
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--galex-blue);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Volume Control */
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 160px;
+}
+
+.volume-slider {
+    flex: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    position: relative;
+    cursor: pointer;
+}
+
+.volume-level {
+    position: absolute;
+    height: 100%;
+    background: var(--galex-gradient);
+    border-radius: 2px;
+    width: 70%;
+}
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+    .album-title {
+        font-size: 64px;
+    }
+    
+    .album-art-container {
+        width: 320px;
+        height: 320px;
+    }
+    
+    .sidebar {
+        width: 280px;
+    }
+}
+
 @media (max-width: 1200px) {
     .album-title {
         font-size: 56px;
@@ -590,25 +973,81 @@ body {
         width: 280px;
         height: 280px;
     }
+    
+    .album-stats {
+        flex-direction: column;
+        gap: 24px;
+    }
+    
+    .now-playing {
+        padding: 32px;
+    }
 }
 
 @media (max-width: 992px) {
-    .album-info {
+    .app-container {
         flex-direction: column;
+        padding: 16px;
     }
     
-    .album-art-container {
-        align-self: center;
+    .sidebar {
+        width: 100%;
+        flex-direction: row;
+        padding: 20px;
+        margin-bottom: 16px;
+    }
+    
+    .logo {
+        padding: 0;
+        margin-right: 40px;
+    }
+    
+    .nav-menu {
+        flex-direction: row;
+        gap: 4px;
+    }
+    
+    .nav-item {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+    
+    .nav-item span {
+        display: none;
+    }
+    
+    .album-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .album-details {
+        width: 100%;
+    }
+    
+    .controls-row {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .volume-control {
+        width: 100%;
+        justify-content: center;
+        margin-top: 16px;
     }
 }
 
 @media (max-width: 768px) {
     .top-bar {
-        padding: 16px;
+        padding: 20px;
+        flex-wrap: wrap;
+        gap: 16px;
     }
     
     .search-container {
-        width: 200px;
+        width: 100%;
+        order: 3;
     }
     
     .now-playing {
@@ -618,41 +1057,146 @@ body {
     .album-title {
         font-size: 40px;
     }
+    
+    .album-art-container {
+        width: 240px;
+        height: 240px;
+    }
+    
+    .playlist-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .playlist-header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+    }
+    
+    .sort-options {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
-/* Wave Animation */
-.wave-animation {
+@media (max-width: 480px) {
+    .album-title {
+        font-size: 32px;
+    }
+    
+    .album-art-container {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .stat-value {
+        font-size: 22px;
+    }
+    
+    .controls-center {
+        gap: 16px;
+    }
+    
+    .control-btn.play-pause {
+        width: 56px;
+        height: 56px;
+    }
+}
+
+/* Context Menu */
+.context-menu {
+    position: fixed;
+    background: rgba(30, 30, 45, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+    padding: 8px 0;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    min-width: 200px;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: all 0.2s ease;
+}
+
+.context-menu.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.context-item {
+    padding: 12px 20px;
+    color: var(--galex-gray);
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
     display: flex;
     align-items: center;
-    gap: 4px;
-    height: 20px;
+    gap: 12px;
+    font-size: 14px;
 }
 
-.wave-bar {
-    width: 3px;
-    height: 100%;
-    background: var(--galex-blue);
-    border-radius: 3px;
-    animation: wave 1.2s ease-in-out infinite;
+.context-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--galex-white);
+    padding-left: 24px;
 }
 
-.wave-bar:nth-child(2) { animation-delay: -1.1s; }
-.wave-bar:nth-child(3) { animation-delay: -1.0s; }
-.wave-bar:nth-child(4) { animation-delay: -0.9s; }
-.wave-bar:nth-child(5) { animation-delay: -0.8s; }
+/* Hover Effects */
+.hover-lift {
+    transition: transform var(--transition-speed) ease;
+}
 
-@keyframes wave {
-    0%, 40%, 100% { transform: scaleY(0.4); }
-    20% { transform: scaleY(1); }
+.hover-lift:hover {
+    transform: translateY(-4px);
+}
+
+/* Glass Morphism */
+.glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Floating Action Button */
+.fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: var(--galex-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-speed) ease;
+    z-index: 100;
+}
+
+.fab:hover {
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 20px 40px rgba(29, 81, 185, 0.4);
 }
 </style>
 </head>
 <body>
-<div class="background-gradient"></div>
-<div class="background-pattern"></div>
+<!-- Animated Background -->
+<div class="animated-background"></div>
+<div class="background-particles" id="particlesContainer"></div>
+
+<!-- Loading Screen -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <h3 style="color: var(--galex-white); font-weight: 600;">Loading Galex Premium...</h3>
+</div>
 
 <div class="app-container">
-    <!-- Sidebar -->
+    <!-- Enhanced Sidebar -->
     <div class="sidebar">
         <div class="logo">
             <div class="logo-icon">G</div>
@@ -671,7 +1215,7 @@ body {
                 </div>
                 <div class="nav-item">
                     <div class="nav-icon"><i class="fas fa-book"></i></div>
-                    <span>Your Library</span>
+                    <span>Library</span>
                 </div>
                 <div class="nav-item" id="spotifyConnectBtn">
                     <div class="nav-icon"><i class="fab fa-spotify"></i></div>
@@ -683,13 +1227,13 @@ body {
     
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Top Bar -->
+        <!-- Enhanced Top Bar -->
         <div class="top-bar">
             <div class="nav-controls">
-                <button class="nav-btn" onclick="prevSong()">
+                <button class="nav-btn hover-lift" onclick="prevSong()">
                     <i class="fas fa-step-backward"></i>
                 </button>
-                <button class="nav-btn" onclick="nextSong()">
+                <button class="nav-btn hover-lift" onclick="nextSong()">
                     <i class="fas fa-step-forward"></i>
                 </button>
             </div>
@@ -702,15 +1246,19 @@ body {
                        oninput="filterSongs(this.value)" id="searchInput">
             </div>
             
-            <div class="user-profile" id="userProfile">
+            <div class="user-profile hover-lift" id="userProfile">
                 <div class="user-avatar" id="userAvatar">U</div>
                 <span class="username" id="username">User</span>
             </div>
         </div>
         
+        <!-- Now Playing Section -->
         <div class="now-playing">
             <div class="now-playing-header">
-                <h2>Now Playing</h2>
+                <h2>
+                    <i class="fas fa-music"></i>
+                    Now Playing
+                </h2>
                 <div class="wave-animation" id="waveAnimation" style="display: none;">
                     <div class="wave-bar"></div>
                     <div class="wave-bar"></div>
@@ -731,24 +1279,36 @@ body {
                     <div class="album-stats">
                         <div class="stat-item">
                             <div class="stat-label">Artist</div>
-                            <div class="stat-value" id="artistName">Artist</div>
+                            <div class="stat-value">
+                                <i class="fas fa-user"></i>
+                                <span id="artistName">Artist</span>
+                            </div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-label">Music Director</div>
-                            <div class="stat-value" id="musicDirector">Director</div>
+                            <div class="stat-value">
+                                <i class="fas fa-compact-disc"></i>
+                                <span id="musicDirector">Director</span>
+                            </div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-label">Year</div>
-                            <div class="stat-value" id="songYear">2024</div>
+                            <div class="stat-value">
+                                <i class="fas fa-calendar"></i>
+                                <span id="songYear">2024</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Playlist Section -->
+            <!-- Enhanced Playlist Section -->
             <div class="playlist-section">
                 <div class="playlist-header">
-                    <h3>Playlist</h3>
+                    <h3>
+                        <i class="fas fa-list-music"></i>
+                        Playlist
+                    </h3>
                     <div class="sort-options">
                         <button class="sort-btn" onclick="sortSongs('name')">Title</button>
                         <button class="sort-btn" onclick="sortSongs('year')">Year</button>
@@ -774,26 +1334,36 @@ body {
             </div>
         </div>
         
+        <!-- Enhanced Playback Controls -->
         <div class="playback-controls">
             <div class="progress-container">
                 <span class="time-stamp" id="currentTime">0:00</span>
                 <div class="progress-bar" id="progressBar">
-                    <div class="progress-fill" id="progressFill"></div>
+                    <div class="progress-fill" id="progressFill">
+                        <div class="progress-handle"></div>
+                    </div>
                 </div>
                 <span class="time-stamp" id="duration">0:00</span>
             </div>
             
             <div class="controls-row">
                 <div class="controls-center">
-                    <button class="control-btn" onclick="prevSong()">
+                    <button class="control-btn hover-lift" onclick="prevSong()" title="Previous">
                         <i class="fas fa-step-backward"></i>
                     </button>
-                    <button class="control-btn play-pause" onclick="playPause()" id="playBtn">
+                    <button class="control-btn play-pause hover-lift" onclick="playPause()" id="playBtn" title="Play/Pause">
                         <i class="fas fa-play"></i>
                     </button>
-                    <button class="control-btn" onclick="nextSong()">
+                    <button class="control-btn hover-lift" onclick="nextSong()" title="Next">
                         <i class="fas fa-step-forward"></i>
                     </button>
+                </div>
+                
+                <div class="volume-control">
+                    <i class="fas fa-volume-up" style="color: var(--galex-gray);"></i>
+                    <div class="volume-slider" id="volumeSlider">
+                        <div class="volume-level" id="volumeLevel"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -802,6 +1372,27 @@ body {
 
 <!-- Toast Notification -->
 <div class="toast" id="toast"></div>
+
+<!-- Context Menu -->
+<div class="context-menu" id="contextMenu">
+    <div class="context-item" onclick="addToQueue()">
+        <i class="fas fa-plus"></i>
+        <span>Add to Queue</span>
+    </div>
+    <div class="context-item" onclick="addToPlaylist()">
+        <i class="fas fa-list-music"></i>
+        <span>Add to Playlist</span>
+    </div>
+    <div class="context-item" onclick="shareSong()">
+        <i class="fas fa-share"></i>
+        <span>Share</span>
+    </div>
+</div>
+
+<!-- Floating Action Button -->
+<div class="fab" id="floatingActionBtn" onclick="showQuickActions()">
+    <i class="fas fa-plus"></i>
+</div>
 
 <script>
 // Enhanced Playlist Data
@@ -890,8 +1481,8 @@ const playlist = [
 
 // Spotify Configuration
 const SPOTIFY_CONFIG = {
-    clientId: 'YOUR_SPOTIFY_CLIENT_ID_HERE', // Replace with your actual Client ID
-    redirectUri: window.location.origin + '/callback', // Will work with current page
+    clientId: 'YOUR_SPOTIFY_CLIENT_ID_HERE',
+    redirectUri: window.location.origin + '/callback',
     scopes: [
         'user-read-private',
         'user-read-email',
@@ -913,6 +1504,9 @@ let spotifyToken = null;
 let spotifyPlayer = null;
 let isSpotifyConnected = false;
 let spotifyDeviceId = null;
+let volume = 0.7;
+let queue = [];
+let favorites = new Set();
 
 // DOM Elements
 const elements = {
@@ -932,8 +1526,138 @@ const elements = {
     searchInput: document.getElementById('searchInput'),
     userAvatar: document.getElementById('userAvatar'),
     username: document.getElementById('username'),
-    spotifyConnectBtn: document.getElementById('spotifyConnectBtn')
+    spotifyConnectBtn: document.getElementById('spotifyConnectBtn'),
+    volumeSlider: document.getElementById('volumeSlider'),
+    volumeLevel: document.getElementById('volumeLevel'),
+    loadingOverlay: document.getElementById('loadingOverlay'),
+    contextMenu: document.getElementById('contextMenu'),
+    particlesContainer: document.getElementById('particlesContainer'),
+    floatingActionBtn: document.getElementById('floatingActionBtn')
 };
+
+// Create background particles
+function createParticles() {
+    for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.width = Math.random() * 100 + 50 + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.left = Math.random() * 100 + 'vw';
+        particle.style.top = Math.random() * 100 + 'vh';
+        particle.style.animationDelay = Math.random() * 15 + 's';
+        particle.style.animationDuration = Math.random() * 10 + 10 + 's';
+        elements.particlesContainer.appendChild(particle);
+    }
+}
+
+// Hide loading screen
+function hideLoading() {
+    setTimeout(() => {
+        elements.loadingOverlay.style.opacity = '0';
+        setTimeout(() => {
+            elements.loadingOverlay.style.display = 'none';
+        }, 500);
+    }, 1000);
+}
+
+// Show context menu
+function showContextMenu(x, y, songIndex) {
+    elements.contextMenu.style.left = x + 'px';
+    elements.contextMenu.style.top = y + 'px';
+    elements.contextMenu.classList.add('show');
+    
+    // Store current song index for context menu actions
+    elements.contextMenu.dataset.songIndex = songIndex;
+}
+
+// Hide context menu
+function hideContextMenu() {
+    elements.contextMenu.classList.remove('show');
+}
+
+// Context menu actions
+function addToQueue() {
+    const index = elements.contextMenu.dataset.songIndex;
+    const song = filteredSongs[index];
+    queue.push(song);
+    showToast(`"${song.name}" added to queue`, 'success');
+}
+
+function addToPlaylist() {
+    const index = elements.contextMenu.dataset.songIndex;
+    const song = filteredSongs[index];
+    showToast(`"${song.name}" added to playlist`, 'success');
+}
+
+function shareSong() {
+    const index = elements.contextMenu.dataset.songIndex;
+    const song = filteredSongs[index];
+    if (navigator.share) {
+        navigator.share({
+            title: song.name,
+            text: `Listen to ${song.name} by ${song.artist} on Galex Premium`,
+            url: window.location.href
+        });
+    } else {
+        navigator.clipboard.writeText(`${song.name} by ${song.artist}`);
+        showToast('Link copied to clipboard!', 'success');
+    }
+}
+
+// Floating action button click
+function showQuickActions() {
+    const actions = [
+        { icon: 'fas fa-plus', label: 'Add Song', action: () => console.log('Add song') },
+        { icon: 'fas fa-folder-plus', label: 'New Playlist', action: () => console.log('New playlist') },
+        { icon: 'fas fa-download', label: 'Download', action: () => console.log('Download') },
+        { icon: 'fas fa-share', label: 'Share', action: () => console.log('Share') }
+    ];
+    
+    // Create quick actions menu
+    const menu = document.createElement('div');
+    menu.className = 'context-menu';
+    menu.style.bottom = '100px';
+    menu.style.right = '30px';
+    menu.style.left = 'auto';
+    
+    actions.forEach(action => {
+        const item = document.createElement('div');
+        item.className = 'context-item';
+        item.innerHTML = `<i class="${action.icon}"></i><span>${action.label}</span>`;
+        item.onclick = action.action;
+        menu.appendChild(item);
+    });
+    
+    document.body.appendChild(menu);
+    menu.classList.add('show');
+    
+    // Hide menu when clicking elsewhere
+    setTimeout(() => {
+        document.addEventListener('click', function hideMenu(e) {
+            if (!menu.contains(e.target) && e.target !== elements.floatingActionBtn) {
+                menu.classList.remove('show');
+                setTimeout(() => menu.remove(), 200);
+                document.removeEventListener('click', hideMenu);
+            }
+        });
+    }, 100);
+}
+
+// Volume control
+function setupVolumeControl() {
+    elements.volumeSlider.addEventListener('click', (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const percent = (e.clientX - rect.left) / rect.width;
+        volume = Math.max(0, Math.min(1, percent));
+        audio.volume = volume;
+        elements.volumeLevel.style.width = `${volume * 100}%`;
+        showToast(`Volume: ${Math.round(volume * 100)}%`);
+    });
+    
+    // Initialize volume
+    audio.volume = volume;
+    elements.volumeLevel.style.width = `${volume * 100}%`;
+}
 
 // ======================
 // SPOTIFY FUNCTIONS
@@ -948,7 +1672,6 @@ function initSpotify() {
     
     window.onSpotifyWebPlaybackSDKReady = () => {
         console.log('Spotify Web Playback SDK ready');
-        // Check for stored token
         const storedToken = localStorage.getItem('spotify_token');
         if (storedToken) {
             spotifyToken = storedToken;
@@ -963,7 +1686,7 @@ function initSpotify() {
 // Connect to Spotify
 function connectSpotify() {
     const authUrl = `https://accounts.spotify.com/authorize?response_type=token&client_id=${SPOTIFY_CONFIG.clientId}&scope=${encodeURIComponent(SPOTIFY_CONFIG.scopes)}&redirect_uri=${encodeURIComponent(SPOTIFY_CONFIG.redirectUri)}&show_dialog=true`;
-    window.location.href = authUrl;
+    window.open(authUrl, 'Spotify Auth', 'width=600,height=700');
 }
 
 // Handle Spotify Callback
@@ -977,10 +1700,9 @@ function handleSpotifyCallback() {
         isSpotifyConnected = true;
         localStorage.setItem('spotify_token', token);
         setupSpotifyPlayer(token);
-        showToast('Successfully connected to Spotify!', 'info');
+        showToast('Successfully connected to Spotify!', 'success');
         updateConnectionStatus();
         
-        // Remove token from URL
         window.history.replaceState({}, document.title, window.location.pathname);
     }
 }
@@ -990,17 +1712,15 @@ function setupSpotifyPlayer(token) {
     spotifyPlayer = new Spotify.Player({
         name: 'Galex Premium Player',
         getOAuthToken: cb => { cb(token); },
-        volume: 0.5
+        volume: volume
     });
 
-    // Ready
     spotifyPlayer.addListener('ready', ({ device_id }) => {
         console.log('Ready with Device ID', device_id);
         spotifyDeviceId = device_id;
-        showToast('Spotify player ready', 'info');
+        showToast('Spotify player ready', 'success');
     });
 
-    // Not Ready
     spotifyPlayer.addListener('not_ready', ({ device_id }) => {
         console.log('Device ID has gone offline', device_id);
         spotifyDeviceId = null;
@@ -1022,17 +1742,14 @@ function setupSpotifyPlayer(token) {
         showToast('Spotify account error', 'error');
     });
 
-    // Player state
     spotifyPlayer.addListener('player_state_changed', state => {
         if (!state) return;
         
         const { track_window: { current_track }, paused, position, duration } = state;
         
-        // Update UI with current track
         if (current_track) {
             updateNowPlayingUI(current_track);
             
-            // Update progress bar
             if (duration > 0) {
                 const progress = (position / duration) * 100;
                 elements.progressFill.style.width = `${progress}%`;
@@ -1041,12 +1758,10 @@ function setupSpotifyPlayer(token) {
             }
         }
         
-        // Update playback state
         isPlaying = !paused;
         updatePlayButton();
     });
 
-    // Connect to the player
     spotifyPlayer.connect().then(success => {
         if (success) {
             console.log('Spotify player connected successfully');
@@ -1063,7 +1778,6 @@ function updateNowPlayingUI(track) {
         elements.musicDirector.textContent = 'Spotify';
         elements.songYear.textContent = new Date(track.album.release_date).getFullYear() || 'Unknown';
         
-        // Start album rotation if playing
         if (isPlaying) {
             elements.songImg.classList.add('playing');
             elements.waveAnimation.style.display = 'flex';
@@ -1095,7 +1809,7 @@ function playSpotifyTrack(spotifyUri) {
         if (response.status === 404) {
             showToast('Device not found. Try reconnecting to Spotify.', 'error');
         } else if (response.ok) {
-            showToast('Playing from Spotify', 'info');
+            showToast('Playing from Spotify', 'success');
             isPlaying = true;
             updatePlayButton();
         } else if (response.status === 403) {
@@ -1125,7 +1839,6 @@ async function searchSpotify(query) {
             const data = await response.json();
             return data.tracks.items;
         } else if (response.status === 401) {
-            // Token expired
             disconnectSpotify();
             showToast('Spotify session expired. Please reconnect.', 'error');
         }
@@ -1154,14 +1867,16 @@ function disconnectSpotify() {
 function updateConnectionStatus() {
     if (isSpotifyConnected) {
         elements.userAvatar.innerHTML = '<i class="fab fa-spotify"></i>';
-        elements.userAvatar.style.background = '#1DB954'; // Spotify green
+        elements.userAvatar.style.background = 'linear-gradient(135deg, #1DB954, #1ed760)';
         elements.username.textContent = 'Spotify';
         elements.spotifyConnectBtn.querySelector('span').textContent = 'Connected to Spotify';
+        elements.spotifyConnectBtn.style.background = 'rgba(29, 185, 84, 0.1)';
     } else {
         elements.userAvatar.textContent = 'U';
-        elements.userAvatar.style.background = 'linear-gradient(135deg, var(--galex-blue), var(--galex-light-blue))';
+        elements.userAvatar.style.background = 'var(--galex-gradient)';
         elements.username.textContent = 'User';
         elements.spotifyConnectBtn.querySelector('span').textContent = 'Connect Spotify';
+        elements.spotifyConnectBtn.style.background = '';
     }
 }
 
@@ -1171,12 +1886,15 @@ function updateConnectionStatus() {
 
 // Initialize Player
 function initPlayer() {
+    createParticles();
     loadSong(currentIndex);
     updatePlaylist();
     setupEventListeners();
-    showToast('Galex Player Ready', 'info');
+    setupVolumeControl();
+    showToast('Galex Premium Player Ready', 'success');
     initSpotify();
     handleSpotifyCallback();
+    hideLoading();
 }
 
 // Load Song
@@ -1186,39 +1904,31 @@ function loadSong(index) {
     currentIndex = index;
     const song = filteredSongs[currentIndex];
     
-    // Check if it's a Spotify track
     if (song.isSpotify) {
-        // Play Spotify track
         playSpotifyTrack(song.src);
         
-        // Update UI
         elements.songImg.src = song.img;
         elements.songName.textContent = song.name;
         elements.artistName.textContent = song.artist;
         elements.musicDirector.textContent = song.music;
         elements.songYear.textContent = song.year;
         
-        showToast(`Now Playing from Spotify: ${song.name}`, 'info');
+        showToast(`Now Playing from Spotify: ${song.name}`, 'success');
     } else {
-        // Play local track
         audio.src = song.src;
         
-        // Update UI elements
         elements.songImg.src = song.img;
         elements.songName.textContent = song.name;
         elements.artistName.textContent = song.artist;
         elements.musicDirector.textContent = song.music;
         elements.songYear.textContent = song.year;
         
-        // Reset progress
         elements.progressFill.style.width = '0%';
         elements.currentTime.textContent = '0:00';
         
-        // Show notification
-        showToast(`Now Playing: ${song.name}`, 'info');
+        showToast(`Now Playing: ${song.name}`, 'success');
     }
     
-    // Update playlist highlighting
     updatePlaylist();
 }
 
@@ -1230,7 +1940,6 @@ function playPause() {
             updatePlayButton();
         }).catch(error => {
             console.error('Spotify playback error:', error);
-            // Fall back to local player
             playPauseLocal();
         });
     } else {
@@ -1283,7 +1992,7 @@ function nextSong() {
     
     if (isPlaying) {
         if (filteredSongs[currentIndex].isSpotify) {
-            // Spotify will handle playback
+            // Spotify handles playback
         } else {
             audio.play().then(() => {
                 elements.playBtn.innerHTML = '<i class="fas fa-pause"></i>';
@@ -1306,7 +2015,7 @@ function prevSong() {
         
         if (isPlaying) {
             if (filteredSongs[currentIndex].isSpotify) {
-                // Spotify will handle playback
+                // Spotify handles playback
             } else {
                 audio.play().then(() => {
                     elements.playBtn.innerHTML = '<i class="fas fa-pause"></i>';
@@ -1331,7 +2040,6 @@ function setupProgressBar() {
     
     elements.progressBar.addEventListener('click', (e) => {
         if (isSpotifyConnected && spotifyPlayer) {
-            // Spotify progress bar doesn't support click-to-seek via Web Playback SDK
             showToast('Seek not available for Spotify Web Player', 'info');
             return;
         }
@@ -1359,7 +2067,7 @@ function updatePlaylist() {
     filteredSongs.forEach((song, index) => {
         const row = document.createElement('tr');
         row.className = index === currentIndex ? 'active' : '';
-        row.onclick = () => {
+        row.onclick = (e) => {
             currentIndex = index;
             loadSong(currentIndex);
             if (!isPlaying) {
@@ -1369,11 +2077,21 @@ function updatePlaylist() {
             }
         };
         
+        // Context menu for right-click
+        row.oncontextmenu = (e) => {
+            e.preventDefault();
+            showContextMenu(e.pageX, e.pageY, index);
+        };
+        
         const spotifyBadge = song.isSpotify ? '<span class="spotify-badge"><i class="fab fa-spotify"></i>Spotify</span>' : '';
+        const isFavorite = favorites.has(index) ? 'fas' : 'far';
+        const favoriteColor = favorites.has(index) ? 'style="color: #ff4081;"' : '';
         
         row.innerHTML = `
             <td class="track-number">
-                ${index === currentIndex && isPlaying ? '<div class="wave-animation"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>' : index + 1}
+                ${index === currentIndex && isPlaying ? 
+                    '<div class="wave-animation"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>' : 
+                    index + 1}
             </td>
             <td class="track-title">
                 <img src="${song.img}" alt="${song.name}" class="track-image">
@@ -1386,8 +2104,8 @@ function updatePlaylist() {
             <td class="track-year">${song.year}</td>
             <td class="track-duration">${song.duration}</td>
             <td class="track-actions">
-                <button class="action-btn" onclick="event.stopPropagation(); toggleFavorite(${index})">
-                    <i class="far fa-heart"></i>
+                <button class="action-btn" onclick="event.stopPropagation(); toggleFavorite(${index})" ${favoriteColor}>
+                    <i class="${isFavorite} fa-heart"></i>
                 </button>
             </td>
         `;
@@ -1416,12 +2134,11 @@ async function filterSongs(query) {
         song.album.toLowerCase().includes(searchTerm)
     );
     
-    // Also search Spotify if connected
     if (isSpotifyConnected && query.length > 2) {
         const spotifyResults = await searchSpotify(query);
         spotifyResults.forEach(track => {
             filteredSongs.push({
-                src: track.uri, // Spotify URI
+                src: track.uri,
                 img: track.album.images[0]?.url || '',
                 name: track.name,
                 album: track.album.name,
@@ -1465,24 +2182,31 @@ function toggleFavorite(index) {
     const btn = event.target.closest('button');
     const icon = btn.querySelector('i');
     
-    if (icon.classList.contains('far')) {
-        icon.classList.remove('far');
-        icon.classList.add('fas');
-        icon.style.color = '#1d51b9';
-        showToast('Added to favorites', 'info');
-    } else {
+    if (favorites.has(index)) {
+        favorites.delete(index);
         icon.classList.remove('fas');
         icon.classList.add('far');
         icon.style.color = '';
         showToast('Removed from favorites', 'info');
+    } else {
+        favorites.add(index);
+        icon.classList.remove('far');
+        icon.classList.add('fas');
+        icon.style.color = '#ff4081';
+        showToast('Added to favorites', 'success');
     }
 }
 
 // Toast Notifications
 function showToast(message, type = 'info') {
     elements.toast.textContent = message;
-    elements.toast.style.background = type === 'error' ? '#e22134' : 
-                                      '#1d51b9'; // Always use Galex blue for info/success
+    elements.toast.className = 'toast';
+    
+    if (type === 'success') {
+        elements.toast.classList.add('success');
+    } else if (type === 'error') {
+        elements.toast.classList.add('error');
+    }
     
     elements.toast.classList.add('show');
     
@@ -1522,9 +2246,9 @@ function setupEventListeners() {
     // User profile click
     document.getElementById('userProfile').onclick = () => {
         if (isSpotifyConnected) {
-            showToast('Connected to Spotify', 'info');
+            showToast('Connected to Spotify Premium', 'success');
         } else {
-            showToast('Galex Music Player', 'info');
+            showToast('Galex Premium Music Player', 'info');
         }
     };
     
@@ -1544,24 +2268,45 @@ function setupEventListeners() {
             case 'KeyK':
                 if (e.ctrlKey) playPause();
                 break;
+            case 'KeyF':
+                if (e.ctrlKey) toggleFavorite(currentIndex);
+                break;
+            case 'KeyM':
+                if (e.ctrlKey) {
+                    volume = volume === 0 ? 0.7 : 0;
+                    audio.volume = volume;
+                    elements.volumeLevel.style.width = `${volume * 100}%`;
+                    showToast(volume === 0 ? 'Muted' : 'Unmuted');
+                }
+                break;
         }
     });
     
     // Setup progress bar
     setupProgressBar();
+    
+    // Hide context menu on click outside
+    document.addEventListener('click', hideContextMenu);
+    
+    // Close context menu with Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            hideContextMenu();
+        }
+    });
 }
 
 // Initialize when page loads
 window.addEventListener('DOMContentLoaded', initPlayer);
 
-// Export functions to global scope for onclick handlers
+// Export functions to global scope
 window.playPause = playPause;
 window.prevSong = prevSong;
 window.nextSong = nextSong;
 window.filterSongs = filterSongs;
 window.sortSongs = sortSongs;
 window.connectSpotify = connectSpotify;
+window.toggleFavorite = toggleFavorite;
 </script>
 </body>
 </html>
-
