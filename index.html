@@ -801,7 +801,6 @@ body {
     animation: albumRotate 30s linear infinite;
 }
 
-/* Enhanced Wave Animation */
 .wave-animation {
     display: flex;
     align-items: center;
@@ -872,7 +871,6 @@ body {
     background: linear-gradient(135deg, #ef4444, #dc2626);
 }
 
-/* Spotify Badge */
 .spotify-badge {
     display: inline-flex;
     align-items: center;
@@ -949,7 +947,6 @@ body {
     width: 70%;
 }
 
-/* Responsive Design */
 @media (max-width: 1400px) {
     .album-title {
         font-size: 64px;
@@ -1062,6 +1059,7 @@ body {
     .album-art-container {
         width: 240px;
         height: 240px;
+        border-radius: 50%;
     }
     
     .playlist-table {
@@ -1105,7 +1103,6 @@ body {
     }
 }
 
-/* Context Menu */
 .context-menu {
     position: fixed;
     background: rgba(30, 30, 45, 0.95);
@@ -1143,7 +1140,6 @@ body {
     padding-left: 24px;
 }
 
-/* Hover Effects */
 .hover-lift {
     transition: transform var(--transition-speed) ease;
 }
@@ -1152,14 +1148,12 @@ body {
     transform: translateY(-4px);
 }
 
-/* Glass Morphism */
 .glass {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Floating Action Button */
 .fab {
     position: fixed;
     bottom: 30px;
@@ -1186,18 +1180,15 @@ body {
 </style>
 </head>
 <body>
-<!-- Animated Background -->
 <div class="animated-background"></div>
 <div class="background-particles" id="particlesContainer"></div>
 
-<!-- Loading Screen -->
 <div class="loading-overlay" id="loadingOverlay">
     <div class="loading-spinner"></div>
     <h3 style="color: var(--galex-white); font-weight: 600;">Loading Galex Premium...</h3>
 </div>
 
 <div class="app-container">
-    <!-- Enhanced Sidebar -->
     <div class="sidebar">
         <div class="logo">
             <div class="logo-icon">G</div>
@@ -1226,9 +1217,7 @@ body {
         </div>
     </div>
     
-    <!-- Main Content -->
     <div class="main-content">
-        <!-- Enhanced Top Bar -->
         <div class="top-bar">
             <div class="nav-controls">
                 <button class="nav-btn hover-lift" onclick="prevSong()">
@@ -1253,7 +1242,6 @@ body {
             </div>
         </div>
         
-        <!-- Now Playing Section -->
         <div class="now-playing">
             <div class="now-playing-header">
                 <h2>
@@ -1303,7 +1291,6 @@ body {
                 </div>
             </div>
             
-            <!-- Enhanced Playlist Section -->
             <div class="playlist-section">
                 <div class="playlist-header">
                     <h3>
@@ -1335,7 +1322,6 @@ body {
             </div>
         </div>
         
-        <!-- Enhanced Playback Controls -->
         <div class="playback-controls">
             <div class="progress-container">
                 <span class="time-stamp" id="currentTime">0:00</span>
@@ -1371,10 +1357,8 @@ body {
     </div>
 </div>
 
-<!-- Toast Notification -->
 <div class="toast" id="toast"></div>
 
-<!-- Context Menu -->
 <div class="context-menu" id="contextMenu">
     <div class="context-item" onclick="addToQueue()">
         <i class="fas fa-plus"></i>
@@ -1389,14 +1373,11 @@ body {
         <span>Share</span>
     </div>
 </div>
-
-<!-- Floating Action Button -->
 <div class="fab" id="floatingActionBtn" onclick="showQuickActions()">
     <i class="fas fa-plus"></i>
 </div>
 
 <script>
-// Enhanced Playlist Data
 const playlist = [
     {
         src: "Aagaya Suriyanai - Harish Raghavendra, Harini.mp3",
@@ -1480,7 +1461,6 @@ const playlist = [
     }
 ];
 
-// Spotify Configuration
 const SPOTIFY_CONFIG = {
     clientId: 'YOUR_SPOTIFY_CLIENT_ID_HERE',
     redirectUri: window.location.origin + '/callback',
@@ -1496,7 +1476,6 @@ const SPOTIFY_CONFIG = {
     ].join(' ')
 };
 
-// Player State
 let audio = new Audio();
 let currentIndex = 0;
 let filteredSongs = [...playlist];
@@ -1509,7 +1488,6 @@ let volume = 0.7;
 let queue = [];
 let favorites = new Set();
 
-// DOM Elements
 const elements = {
     songImg: document.getElementById('songImg'),
     songName: document.getElementById('songName'),
@@ -1536,7 +1514,6 @@ const elements = {
     floatingActionBtn: document.getElementById('floatingActionBtn')
 };
 
-// Create background particles
 function createParticles() {
     for (let i = 0; i < 30; i++) {
         const particle = document.createElement('div');
@@ -1551,7 +1528,6 @@ function createParticles() {
     }
 }
 
-// Hide loading screen
 function hideLoading() {
     setTimeout(() => {
         elements.loadingOverlay.style.opacity = '0';
@@ -1560,23 +1536,17 @@ function hideLoading() {
         }, 500);
     }, 1000);
 }
-
-// Show context menu
 function showContextMenu(x, y, songIndex) {
     elements.contextMenu.style.left = x + 'px';
     elements.contextMenu.style.top = y + 'px';
     elements.contextMenu.classList.add('show');
-    
-    // Store current song index for context menu actions
     elements.contextMenu.dataset.songIndex = songIndex;
 }
 
-// Hide context menu
 function hideContextMenu() {
     elements.contextMenu.classList.remove('show');
 }
 
-// Context menu actions
 function addToQueue() {
     const index = elements.contextMenu.dataset.songIndex;
     const song = filteredSongs[index];
@@ -1605,7 +1575,6 @@ function shareSong() {
     }
 }
 
-// Floating action button click
 function showQuickActions() {
     const actions = [
         { icon: 'fas fa-plus', label: 'Add Song', action: () => console.log('Add song') },
@@ -1614,7 +1583,6 @@ function showQuickActions() {
         { icon: 'fas fa-share', label: 'Share', action: () => console.log('Share') }
     ];
     
-    // Create quick actions menu
     const menu = document.createElement('div');
     menu.className = 'context-menu';
     menu.style.bottom = '100px';
@@ -1632,7 +1600,6 @@ function showQuickActions() {
     document.body.appendChild(menu);
     menu.classList.add('show');
     
-    // Hide menu when clicking elsewhere
     setTimeout(() => {
         document.addEventListener('click', function hideMenu(e) {
             if (!menu.contains(e.target) && e.target !== elements.floatingActionBtn) {
@@ -1644,7 +1611,6 @@ function showQuickActions() {
     }, 100);
 }
 
-// Volume control
 function setupVolumeControl() {
     elements.volumeSlider.addEventListener('click', (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -1655,16 +1621,10 @@ function setupVolumeControl() {
         showToast(`Volume: ${Math.round(volume * 100)}%`);
     });
     
-    // Initialize volume
     audio.volume = volume;
     elements.volumeLevel.style.width = `${volume * 100}%`;
 }
 
-// ======================
-// SPOTIFY FUNCTIONS
-// ======================
-
-// Initialize Spotify SDK
 function initSpotify() {
     const script = document.createElement('script');
     script.src = 'https://sdk.scdn.co/spotify-player.js';
@@ -1684,13 +1644,11 @@ function initSpotify() {
     };
 }
 
-// Connect to Spotify
 function connectSpotify() {
     const authUrl = `https://accounts.spotify.com/authorize?response_type=token&client_id=${SPOTIFY_CONFIG.clientId}&scope=${encodeURIComponent(SPOTIFY_CONFIG.scopes)}&redirect_uri=${encodeURIComponent(SPOTIFY_CONFIG.redirectUri)}&show_dialog=true`;
     window.open(authUrl, 'Spotify Auth', 'width=600,height=700');
 }
 
-// Handle Spotify Callback
 function handleSpotifyCallback() {
     const hash = window.location.hash.substring(1);
     const params = new URLSearchParams(hash);
@@ -1708,7 +1666,6 @@ function handleSpotifyCallback() {
     }
 }
 
-// Setup Spotify Web Player
 function setupSpotifyPlayer(token) {
     spotifyPlayer = new Spotify.Player({
         name: 'Galex Premium Player',
@@ -1770,7 +1727,6 @@ function setupSpotifyPlayer(token) {
     });
 }
 
-// Update UI with Spotify track info
 function updateNowPlayingUI(track) {
     if (track) {
         elements.songImg.src = track.album.images[0]?.url || 'https://via.placeholder.com/300';
@@ -1789,7 +1745,6 @@ function updateNowPlayingUI(track) {
     }
 }
 
-// Play Spotify Track
 function playSpotifyTrack(spotifyUri) {
     if (!spotifyToken || !spotifyDeviceId) {
         showToast('Please connect to Spotify first', 'error');
@@ -1822,7 +1777,6 @@ function playSpotifyTrack(spotifyUri) {
     });
 }
 
-// Search Spotify
 async function searchSpotify(query) {
     if (!spotifyToken) {
         showToast('Please connect to Spotify first', 'error');
@@ -1850,7 +1804,6 @@ async function searchSpotify(query) {
     }
 }
 
-// Disconnect Spotify
 function disconnectSpotify() {
     if (spotifyPlayer) {
         spotifyPlayer.disconnect();
@@ -1864,7 +1817,6 @@ function disconnectSpotify() {
     showToast('Disconnected from Spotify', 'info');
 }
 
-// Update connection status UI
 function updateConnectionStatus() {
     if (isSpotifyConnected) {
         elements.userAvatar.innerHTML = '<i class="fab fa-spotify"></i>';
@@ -1881,11 +1833,7 @@ function updateConnectionStatus() {
     }
 }
 
-// ======================
-// LOCAL PLAYER FUNCTIONS
-// ======================
 
-// Initialize Player
 function initPlayer() {
     createParticles();
     loadSong(currentIndex);
@@ -1898,7 +1846,6 @@ function initPlayer() {
     hideLoading();
 }
 
-// Load Song
 function loadSong(index) {
     if (index < 0 || index >= filteredSongs.length) return;
     
@@ -1933,7 +1880,6 @@ function loadSong(index) {
     updatePlaylist();
 }
 
-// Play/Pause
 function playPause() {
     if (isSpotifyConnected && spotifyPlayer) {
         spotifyPlayer.togglePlay().then(() => {
@@ -1948,7 +1894,6 @@ function playPause() {
     }
 }
 
-// Local player play/pause
 function playPauseLocal() {
     if (audio.src) {
         if (isPlaying) {
@@ -1973,7 +1918,6 @@ function playPauseLocal() {
     }
 }
 
-// Update play button
 function updatePlayButton() {
     if (isPlaying) {
         elements.playBtn.innerHTML = '<i class="fas fa-pause"></i>';
@@ -1984,7 +1928,6 @@ function updatePlayButton() {
     }
 }
 
-// Navigation
 function nextSong() {
     if (filteredSongs.length === 0) return;
     
@@ -2028,7 +1971,6 @@ function prevSong() {
     }
 }
 
-// Progress Bar
 function setupProgressBar() {
     audio.ontimeupdate = () => {
         if (audio.duration && !isNaN(audio.duration)) {
@@ -2053,7 +1995,6 @@ function setupProgressBar() {
     });
 }
 
-// Format Time
 function formatTime(seconds) {
     if (isNaN(seconds)) return "0:00";
     const min = Math.floor(seconds / 60);
@@ -2061,7 +2002,6 @@ function formatTime(seconds) {
     return `${min}:${sec < 10 ? '0' : ''}${sec}`;
 }
 
-// Update Playlist
 function updatePlaylist() {
     elements.songList.innerHTML = '';
     
@@ -2078,7 +2018,6 @@ function updatePlaylist() {
             }
         };
         
-        // Context menu for right-click
         row.oncontextmenu = (e) => {
             e.preventDefault();
             showContextMenu(e.pageX, e.pageY, index);
@@ -2115,7 +2054,6 @@ function updatePlaylist() {
     });
 }
 
-// Search and Filter
 async function filterSongs(query) {
     if (query.trim() === '') {
         filteredSongs = [...playlist];
@@ -2161,7 +2099,6 @@ async function filterSongs(query) {
     updatePlaylist();
 }
 
-// Sort
 function sortSongs(type) {
     document.querySelectorAll('.sort-btn').forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
@@ -2177,7 +2114,6 @@ function sortSongs(type) {
     updatePlaylist();
 }
 
-// Favorites
 function toggleFavorite(index) {
     event.stopPropagation();
     const btn = event.target.closest('button');
@@ -2198,7 +2134,6 @@ function toggleFavorite(index) {
     }
 }
 
-// Toast Notifications
 function showToast(message, type = 'info') {
     elements.toast.textContent = message;
     elements.toast.className = 'toast';
@@ -2216,9 +2151,8 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
-// Event Listeners
 function setupEventListeners() {
-    // Audio events
+    
     audio.onended = () => {
         if (!isSpotifyConnected) {
             nextSong();
@@ -2233,7 +2167,7 @@ function setupEventListeners() {
         elements.waveAnimation.style.display = 'none';
     };
     
-    // Spotify connect button
+    
     elements.spotifyConnectBtn.onclick = () => {
         if (!isSpotifyConnected) {
             connectSpotify();
@@ -2244,7 +2178,6 @@ function setupEventListeners() {
         }
     };
     
-    // User profile click
     document.getElementById('userProfile').onclick = () => {
         if (isSpotifyConnected) {
             showToast('Connected to Spotify Premium', 'success');
@@ -2253,7 +2186,6 @@ function setupEventListeners() {
         }
     };
     
-    // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
         switch(e.code) {
             case 'Space':
@@ -2283,13 +2215,10 @@ function setupEventListeners() {
         }
     });
     
-    // Setup progress bar
     setupProgressBar();
-    
-    // Hide context menu on click outside
+
     document.addEventListener('click', hideContextMenu);
     
-    // Close context menu with Escape
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             hideContextMenu();
@@ -2297,10 +2226,8 @@ function setupEventListeners() {
     });
 }
 
-// Initialize when page loads
 window.addEventListener('DOMContentLoaded', initPlayer);
 
-// Export functions to global scope
 window.playPause = playPause;
 window.prevSong = prevSong;
 window.nextSong = nextSong;
@@ -2311,4 +2238,3 @@ window.toggleFavorite = toggleFavorite;
 </script>
 </body>
 </html>
-
