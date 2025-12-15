@@ -3,36 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <title>Galex Premium - Music Player</title>
-<link rel="icon" src="logo.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
     --galex-blue: #1d51b9;
     --galex-light-blue: #1eafd7;
-    --galex-purple: #8a2be2;
-    --galex-dark: #0a0a0f;
-    --galex-card: #141420;
-    --galex-gray: #a0a0c0;
-    --galex-light-gray: #2a2a3a;
+    --galex-dark: #121212;
+    --galex-card: #181818;
+    --galex-gray: #b3b3b3;
+    --galex-light-gray: #282828;
     --galex-white: #ffffff;
-    --galex-gradient: linear-gradient(135deg, var(--galex-blue), var(--galex-purple));
-    --transition-speed: 0.4s;
-    --border-radius: 16px;
-    --border-radius-lg: 24px;
-    --border-radius-sm: 12px;
-    --player-height: 100px;
-    --sidebar-width: 300px;
-    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.2);
-    --shadow-sm: 0 5px 15px rgba(0, 0, 0, 0.1);
+    --transition-speed: 0.3s;
+    --border-radius: 8px;
+    --player-height: 90px;
+    --sidebar-width: 280px;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    font-family: 'Circular', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
 }
 
 body {
@@ -40,182 +31,202 @@ body {
     color: var(--galex-white);
     height: 100vh;
     overflow: hidden;
-    font-weight: 400;
 }
 
-.animated-background {
+/* Background Effects */
+.background-gradient {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
-        radial-gradient(circle at 10% 20%, rgba(29, 81, 185, 0.15) 0%, transparent 20%),
-        radial-gradient(circle at 90% 80%, rgba(138, 43, 226, 0.1) 0%, transparent 20%),
-        linear-gradient(180deg, #0a0a0f 0%, #151522 100%);
+    background: linear-gradient(180deg, #121212 0%, #1a1a1a 100%);
     z-index: -2;
-    animation: gradientShift 20s ease infinite alternate;
 }
 
-@keyframes gradientShift {
-    0% { filter: hue-rotate(0deg); }
-    100% { filter: hue-rotate(360deg); }
-}
-
-.background-particles {
+.background-pattern {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(29, 81, 185, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(30, 175, 215, 0.05) 0%, transparent 50%);
     z-index: -1;
-    overflow: hidden;
-}
-
-.particle {
-    position: absolute;
-    background: var(--galex-blue);
-    border-radius: 50%;
-    opacity: 0.1;
-    animation: float 15s infinite linear;
-}
-
-.particle:nth-child(odd) {
-    background: var(--galex-purple);
-}
-
-@keyframes float {
-    0% { transform: translateY(0) rotate(0deg); }
-    100% { transform: translateY(-100vh) rotate(360deg); }
 }
 
 /* Layout */
 .app-container {
     display: flex;
     height: 100vh;
-    gap: 2px;
-    padding: 20px;
-    background: #00000000;
+    gap: 1px;
 }
 
+/* Sidebar */
 .sidebar {
     width: var(--sidebar-width);
-    background: rgba(20, 20, 32, 0.85);
-    backdrop-filter: blur(20px);
-    border-radius: var(--border-radius-lg);
+    background: var(--galex-dark);
     display: flex;
     flex-direction: column;
-    padding: 28px 16px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: var(--shadow-lg);
-    z-index: 10;
+    padding: 24px 12px;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.sidebar.collapsed {
+    width: 80px;
+    padding: 24px 8px;
+}
+
+.sidebar.collapsed .logo-text,
+.sidebar.collapsed .nav-item span,
+.sidebar.collapsed .nav-item .toggle-label {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    position: absolute;
+    pointer-events: none;
+}
+
+.sidebar.collapsed .nav-item {
+    padding: 12px;
+    justify-content: center;
+}
+
+.sidebar.collapsed .nav-icon {
+    margin: 0;
+}
+
+.sidebar.collapsed .logo {
+    justify-content: center;
+    padding: 0 0 24px;
+}
+
+.sidebar.expanded {
+    width: 400px;
 }
 
 .logo {
-    padding: 0 16px 32px;
+    padding: 0 12px 24px;
     display: flex;
     align-items: center;
-    gap: 14px;
-    transition: transform var(--transition-speed) ease;
+    gap: 12px;
+    transition: all 0.3s ease;
 }
 
-.logo:hover {
-    transform: scale(1.02);
+.sidebar.collapsed .logo {
+    gap: 0;
 }
 
 .logo-icon {
-    font-size: 40px;
-    background: var(--galex-gradient);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    font-size: 32px;
+    color: var(--galex-blue);
     font-weight: 900;
-    filter: drop-shadow(0 4px 8px rgba(29, 81, 185, 0.3));
-    animation: logoPulse 3s ease-in-out infinite;
-}
-
-@keyframes logoPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
 }
 
 .logo-text {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 900;
-    letter-spacing: -1.2px;
-    background: var(--galex-gradient);
-    -webkit-background-clip: text;
+    letter-spacing: -1.5px;
+    background: linear-gradient(45deg, var(--galex-blue), var(--galex-light-blue));
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 4px 12px rgba(29, 81, 185, 0.4);
+    -webkit-background-clip: text;
+    transition: opacity 0.3s ease;
+}
+
+.big {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7'%3E%3C/path%3E%3C/svg%3E");
+    height: 24px;
+    width: 24px;
+    margin-left: auto;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    opacity: 0.7;
+    flex-shrink: 0;
+}
+
+.big:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.sidebar.collapsed .big {
+    transform: rotate(180deg);
+    margin: 0 auto;
 }
 
 .nav-section {
-    margin-bottom: 40px;
+    margin-bottom: 32px;
 }
 
 .nav-menu {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
 }
 
 .nav-item {
     display: flex;
     align-items: center;
-    gap: 18px;
-    padding: 16px 20px;
-    border-radius: var(--border-radius);
+    gap: 16px;
+    padding: 12px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all var(--transition-speed) ease;
     color: var(--galex-gray);
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
     position: relative;
-    overflow: hidden;
 }
 
-.nav-item::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 4px;
-    height: 100%;
-    background: var(--galex-gradient);
-    transform: scaleY(0);
-    transition: transform var(--transition-speed) ease;
+.nav-item span {
+    transition: opacity 0.3s ease;
 }
 
 .nav-item:hover {
     background: rgba(255, 255, 255, 0.05);
     color: var(--galex-white);
-    padding-left: 28px;
-    transform: translateX(5px);
-}
-
-.nav-item:hover::before {
-    transform: scaleY(1);
 }
 
 .nav-item.active {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.1);
     color: var(--galex-white);
-    padding-left: 28px;
-}
-
-.nav-item.active::before {
-    transform: scaleY(1);
 }
 
 .nav-icon {
-    font-size: 22px;
-    width: 28px;
+    font-size: 20px;
+    width: 24px;
     text-align: center;
-    transition: transform var(--transition-speed) ease;
 }
 
-.nav-item:hover .nav-icon {
-    transform: scale(1.2);
+.toggle-label {
+    position: absolute;
+    left: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--galex-card);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 100;
+}
+
+.sidebar.collapsed .nav-item:hover .toggle-label {
+    opacity: 1;
 }
 
 .main-content {
@@ -223,21 +234,16 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    background: rgba(20, 20, 32, 0.85);
-    backdrop-filter: blur(20px);
-    border-radius: var(--border-radius-lg);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: var(--shadow-lg);
+    transition: margin-left 0.3s ease;
 }
 
-/* Enhanced Top Bar */
 .top-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 40px;
-    background: transparent;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 16px 32px;
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .nav-controls {
@@ -246,119 +252,77 @@ body {
 }
 
 .nav-btn {
-    width: 44px;
-    height: 44px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
     color: var(--galex-white);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
-    font-size: 18px;
+    transition: all var(--transition-speed) ease;
 }
 
 .nav-btn:hover {
-    background: var(--galex-gradient);
-    transform: translateY(-2px) scale(1.1);
-    box-shadow: var(--shadow-md);
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
 }
 
 .search-container {
     position: relative;
-    width: 360px;
+    width: 300px;
 }
 
 .search-input {
     width: 100%;
-    padding: 14px 20px 14px 56px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px 20px 10px 44px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
     border-radius: 50px;
     color: var(--galex-white);
-    font-size: 15px;
+    font-size: 14px;
     outline: none;
-    transition: all var(--transition-speed) ease;
-}
-
-.search-input:focus {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--galex-blue);
-    box-shadow: 0 0 0 3px rgba(29, 81, 185, 0.2);
 }
 
 .search-icon {
     position: absolute;
-    left: 20px;
+    left: 16px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--galex-gray);
-    font-size: 16px;
-    transition: color var(--transition-speed) ease;
-}
-
-.search-input:focus + .search-icon {
-    color: var(--galex-blue);
+    font-size: 14px;
 }
 
 .user-profile {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 10px 20px 10px 14px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 12px;
+    padding: 6px 12px 6px 6px;
+    background: rgba(0, 0, 0, 0.5);
     border-radius: 50px;
     cursor: pointer;
-    transition: all var(--transition-speed) ease;
-}
-
-.user-profile:hover {
-    background: rgba(255, 255, 255, 0.08);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-sm);
 }
 
 .user-avatar {
-    width: 40px;
-    height: 40px;
-    background: var(--galex-gradient);
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--galex-blue), var(--galex-light-blue));
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 16px;
+    font-size: 14px;
     color: var(--galex-white);
-    transition: transform var(--transition-speed) ease;
 }
 
-.user-profile:hover .user-avatar {
-    transform: rotate(15deg) scale(1.1);
-}
-
-/* Enhanced Now Playing Section */
+/* Now Playing Section */
 .now-playing {
     flex: 1;
     padding: 40px;
     overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--galex-blue) transparent;
-}
-
-.now-playing::-webkit-scrollbar {
-    width: 8px;
-}
-
-.now-playing::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.now-playing::-webkit-scrollbar-thumb {
-    background: var(--galex-blue);
-    border-radius: 4px;
 }
 
 .now-playing-header {
@@ -369,183 +333,128 @@ body {
 }
 
 .now-playing-header h2 {
-    font-size: 36px;
+    font-size: 32px;
     font-weight: 900;
-    background: var(--galex-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: flex;
-    align-items: center;
-    gap: 16px;
 }
 
 .album-info {
     display: flex;
     align-items: flex-start;
-    gap: 50px;
-    margin-bottom: 50px;
+    gap: 40px;
+    margin-bottom: 40px;
 }
 
 .album-art-container {
     position: relative;
-    width: 360px;
-    height: 360px;
+    width: 320px;
+    height: 320px;
     border-radius: 50%;
     overflow: hidden;
-    box-shadow: var(--shadow-lg);
-    border: 4px solid transparent;
-    background: var(--galex-gradient) border-box;
-    animation: borderGlow 3s ease-in-out infinite;
-}
-
-@keyframes borderGlow {
-    0%, 100% { box-shadow: 0 0 30px rgba(29, 81, 185, 0.5), var(--shadow-lg); }
-    50% { box-shadow: 0 0 50px rgba(29, 81, 185, 0.8), var(--shadow-lg); }
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 4px solid var(--galex-blue);
 }
 
 .album-art {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 50%);
-    transition: transform var(--transition-speed) ease;
-}
-
-.album-art:hover {
-    transform: scale(1.02);
+    border-radius: 50%;
 }
 
 .album-details {
     flex: 1;
-    padding-top: 20px;
 }
 
 .album-title {
-    font-size: 80px;
+    font-size: 72px;
     font-weight: 900;
     line-height: 1;
-    margin-bottom: 24px;
-    background: linear-gradient(135deg, #ffffff 0%, #a0a0c0 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    margin-bottom: 20px;
 }
 
 .album-stats {
     display: flex;
-    gap: 40px;
-    margin-bottom: 40px;
+    gap: 32px;
+    margin-bottom: 32px;
 }
 
 .stat-item {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
 }
 
 .stat-label {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--galex-gray);
-    text-transform: uppercase;
-    letter-spacing: 1px;
 }
 
 .stat-value {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 700;
     color: var(--galex-white);
-    display: flex;
-    align-items: center;
-    gap: 10px;
 }
 
-/* Enhanced Playback Controls */
+/* Playback Controls */
 .playback-controls {
-    padding: 24px 40px;
-    background: linear-gradient(to bottom, transparent, rgba(10, 10, 15, 0.95) 30%);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 20px 32px;
+    background: linear-gradient(to bottom, transparent, rgba(18, 18, 18, 0.9) 20%);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .progress-container {
     display: flex;
     align-items: center;
-    gap: 20px;
-    margin-bottom: 24px;
+    gap: 16px;
+    margin-bottom: 20px;
 }
 
 .time-stamp {
-    font-size: 15px;
+    font-size: 14px;
     color: var(--galex-gray);
-    min-width: 50px;
-    font-weight: 500;
+    min-width: 40px;
 }
 
 .progress-bar {
     flex: 1;
-    height: 6px;
+    height: 4px;
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
+    border-radius: 2px;
     position: relative;
     cursor: pointer;
     overflow: hidden;
-    transition: height var(--transition-speed) ease;
-}
-
-.progress-bar:hover {
-    height: 8px;
 }
 
 .progress-fill {
     position: absolute;
     height: 100%;
-    background: var(--galex-gradient);
-    border-radius: 3px;
+    background: var(--galex-blue);
+    border-radius: 2px;
     width: 0%;
-    transition: width 0.1s linear;
-    box-shadow: 0 0 10px rgba(29, 81, 185, 0.5);
-}
-
-.progress-handle {
-    position: absolute;
-    right: -6px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 12px;
-    height: 12px;
-    background: var(--galex-white);
-    border-radius: 50%;
-    opacity: 0;
-    transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
-    box-shadow: 0 0 10px rgba(29, 81, 185, 0.8);
-}
-
-.progress-bar:hover .progress-handle {
-    opacity: 1;
-    transform: translateY(-50%) scale(1.2);
 }
 
 .controls-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 24px;
+    gap: 20px;
 }
 
 .controls-center {
     display: flex;
     align-items: center;
-    gap: 32px;
+    gap: 24px;
 }
 
 .control-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: none;
+    border: none;
     color: var(--galex-gray);
     cursor: pointer;
-    font-size: 20px;
-    transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
-    width: 44px;
-    height: 44px;
+    font-size: 18px;
+    transition: all var(--transition-speed) ease;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -553,190 +462,129 @@ body {
 }
 
 .control-btn:hover {
-    background: var(--galex-gradient);
     color: var(--galex-white);
-    transform: translateY(-2px) scale(1.1);
-    box-shadow: var(--shadow-md);
+    transform: scale(1.1);
 }
 
 .control-btn.play-pause {
-    width: 64px;
-    height: 64px;
-    background: var(--galex-gradient);
+    width: 48px;
+    height: 48px;
+    background: var(--galex-blue);
     color: var(--galex-white);
     border-radius: 50%;
-    font-size: 24px;
-    box-shadow: var(--shadow-md);
+    font-size: 20px;
 }
 
 .control-btn.play-pause:hover {
-    transform: translateY(-3px) scale(1.1);
-    box-shadow: 0 15px 40px rgba(29, 81, 185, 0.4);
+    transform: scale(1.05);
+    background: var(--galex-light-blue);
 }
 
-/* Enhanced Playlist */
+/* Playlist */
 .playlist-section {
-    padding: 0 40px 40px;
+    padding: 0 32px 32px;
 }
 
 .playlist-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
 }
 
 .playlist-header h3 {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 900;
-    background: var(--galex-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 .sort-options {
     display: flex;
-    gap: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 6px;
-    border-radius: var(--border-radius);
+    gap: 8px;
 }
 
 .sort-btn {
-    padding: 10px 20px;
-    background: transparent;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.1);
     border: none;
-    border-radius: var(--border-radius-sm);
+    border-radius: 4px;
     color: var(--galex-gray);
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer;
     transition: all var(--transition-speed) ease;
-    font-weight: 500;
 }
 
 .sort-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
     color: var(--galex-white);
-    transform: translateY(-1px);
 }
 
 .sort-btn.active {
-    background: var(--galex-gradient);
+    background: var(--galex-blue);
     color: var(--galex-white);
     font-weight: 600;
-    box-shadow: var(--shadow-sm);
 }
 
 .playlist-table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
+    border-collapse: collapse;
 }
 
 .playlist-table th {
     text-align: left;
-    padding: 18px 20px;
-    font-size: 13px;
+    padding: 12px 16px;
+    font-size: 12px;
     color: var(--galex-gray);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    background: rgba(255, 255, 255, 0.03);
-}
-
-.playlist-table th:first-child {
-    border-radius: var(--border-radius-sm) 0 0 0;
-}
-
-.playlist-table th:last-child {
-    border-radius: 0 var(--border-radius-sm) 0 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-weight: 400;
 }
 
 .playlist-table td {
-    padding: 18px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all var(--transition-speed) ease;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+    transition: background var(--transition-speed) ease;
 }
 
 .playlist-table tr {
     cursor: pointer;
-    position: relative;
 }
 
-.playlist-table tr::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--galex-gradient);
-    opacity: 0;
-    transition: opacity var(--transition-speed) ease;
-    z-index: -1;
-    border-radius: var(--border-radius-sm);
-}
-
-.playlist-table tr:hover::before {
-    opacity: 0.05;
-}
-
-.playlist-table tr:hover td {
-    transform: translateX(5px);
+.playlist-table tr:hover {
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .playlist-table tr.active {
     background: rgba(29, 81, 185, 0.1);
 }
 
-.playlist-table tr.active::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 4px;
-    height: 100%;
-    background: var(--galex-gradient);
-    border-radius: 2px;
-}
-
 .track-number {
-    width: 50px;
+    width: 40px;
     text-align: center;
-    font-size: 16px;
+    font-size: 14px;
     color: var(--galex-gray);
-    font-weight: 600;
 }
 
 .track-title {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
 }
 
 .track-image {
-    width: 50px;
-    height: 50px;
-    border-radius: var(--border-radius-sm);
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
     object-fit: cover;
-    transition: transform var(--transition-speed) ease;
-    box-shadow: var(--shadow-sm);
-}
-
-.playlist-table tr:hover .track-image {
-    transform: scale(1.05) rotate(2deg);
 }
 
 .track-info {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
 }
 
 .track-name {
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .track-artist {
@@ -753,18 +601,16 @@ body {
     width: 80px;
     font-size: 14px;
     color: var(--galex-gray);
-    font-weight: 500;
 }
 
 .track-duration {
     width: 60px;
     font-size: 14px;
     color: var(--galex-gray);
-    font-weight: 500;
 }
 
 .track-actions {
-    width: 50px;
+    width: 40px;
     text-align: center;
 }
 
@@ -773,46 +619,76 @@ body {
     border: none;
     color: var(--galex-gray);
     cursor: pointer;
-    font-size: 18px;
+    font-size: 16px;
     transition: all var(--transition-speed) ease;
-    width: 36px;
-    height: 36px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
 }
 
 .action-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
     color: var(--galex-blue);
-    transform: scale(1.1);
 }
 
-/* Album Rotation Animation */
+/* Animation for album art rotation */
 @keyframes albumRotate {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
 
 .album-art.playing {
-    animation: albumRotate 30s linear infinite;
+    animation: albumRotate 20s linear infinite;
 }
 
+/* Toast Notification */
+.toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--galex-blue);
+    color: var(--galex-white);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Spotify Badge */
+.spotify-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #1DB954;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+/* Wave Animation */
 .wave-animation {
     display: flex;
     align-items: center;
-    gap: 6px;
-    height: 24px;
+    gap: 4px;
+    height: 20px;
 }
 
 .wave-bar {
-    width: 4px;
+    width: 3px;
     height: 100%;
-    background: var(--galex-gradient);
-    border-radius: 4px;
+    background: var(--galex-blue);
+    border-radius: 3px;
     animation: wave 1.2s ease-in-out infinite;
-    transform-origin: bottom;
 }
 
 .wave-bar:nth-child(2) { animation-delay: -1.1s; }
@@ -821,145 +697,11 @@ body {
 .wave-bar:nth-child(5) { animation-delay: -0.8s; }
 
 @keyframes wave {
-    0%, 100% { transform: scaleY(0.3); }
-    50% { transform: scaleY(1); }
+    0%, 40%, 100% { transform: scaleY(0.4); }
+    20% { transform: scaleY(1); }
 }
 
-/* Enhanced Toast Notification */
-.toast {
-    position: fixed;
-    bottom: 120px;
-    left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background: var(--galex-gradient);
-    color: var(--galex-white);
-    padding: 16px 28px;
-    border-radius: var(--border-radius);
-    font-weight: 600;
-    font-size: 15px;
-    z-index: 10000;
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: var(--shadow-lg);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    max-width: 400px;
-}
-
-.toast::before {
-    content: '\f0e0';
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    font-size: 18px;
-}
-
-.toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
-
-.toast.success {
-    background: linear-gradient(135deg, #10b981, #059669);
-}
-
-.toast.error {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-}
-
-.spotify-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: #1DB954;
-    color: white;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
-    margin-left: 10px;
-    vertical-align: middle;
-    box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
-    animation: badgePulse 2s ease-in-out infinite;
-}
-
-@keyframes badgePulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-/* Loading Animation */
-.loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--galex-dark);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-    transition: opacity 0.5s ease;
-}
-
-.loading-spinner {
-    width: 60px;
-    height: 60px;
-    border: 4px solid rgba(255, 255, 255, 0.1);
-    border-top-color: var(--galex-blue);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 20px;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* Volume Control */
-.volume-control {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    width: 160px;
-}
-
-.volume-slider {
-    flex: 1;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 2px;
-    position: relative;
-    cursor: pointer;
-}
-
-.volume-level {
-    position: absolute;
-    height: 100%;
-    background: var(--galex-gradient);
-    border-radius: 2px;
-    width: 70%;
-}
-
-@media (max-width: 1400px) {
-    .album-title {
-        font-size: 64px;
-    }
-    
-    .album-art-container {
-        width: 320px;
-        height: 320px;
-    }
-    
-    .sidebar {
-        width: 280px;
-    }
-}
-
+/* Responsive */
 @media (max-width: 1200px) {
     .album-title {
         font-size: 56px;
@@ -969,81 +711,25 @@ body {
         width: 280px;
         height: 280px;
     }
-    
-    .album-stats {
-        flex-direction: column;
-        gap: 24px;
-    }
-    
-    .now-playing {
-        padding: 32px;
-    }
 }
 
 @media (max-width: 992px) {
-    .app-container {
-        flex-direction: column;
-        padding: 16px;
-    }
-    
-    .sidebar {
-        width: 100%;
-        flex-direction: row;
-        padding: 20px;
-        margin-bottom: 16px;
-    }
-    
-    .logo {
-        padding: 0;
-        margin-right: 40px;
-    }
-    
-    .nav-menu {
-        flex-direction: row;
-        gap: 4px;
-    }
-    
-    .nav-item {
-        padding: 12px 16px;
-        font-size: 14px;
-    }
-    
-    .nav-item span {
-        display: none;
-    }
-    
     .album-info {
         flex-direction: column;
-        align-items: center;
-        text-align: center;
     }
     
-    .album-details {
-        width: 100%;
-    }
-    
-    .controls-row {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .volume-control {
-        width: 100%;
-        justify-content: center;
-        margin-top: 16px;
+    .album-art-container {
+        align-self: center;
     }
 }
 
 @media (max-width: 768px) {
     .top-bar {
-        padding: 20px;
-        flex-wrap: wrap;
-        gap: 16px;
+        padding: 16px;
     }
     
     .search-container {
-        width: 100%;
-        order: 3;
+        width: 200px;
     }
     
     .now-playing {
@@ -1054,174 +740,93 @@ body {
         font-size: 40px;
     }
     
-    .album-art-container {
-        width: 240px;
-        height: 240px;
-        border-radius: 50%;
+    .sidebar:not(.collapsed) {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 1000;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+        width: 280px !important;
     }
     
-    .playlist-table {
-        display: block;
-        overflow-x: auto;
+    .sidebar.collapsed {
+        width: 60px;
     }
     
-    .playlist-header {
-        flex-direction: column;
-        gap: 16px;
-        align-items: flex-start;
-    }
-    
-    .sort-options {
-        width: 100%;
-        justify-content: center;
+    .big {
+        height: 20px;
+        width: 20px;
     }
 }
 
-@media (max-width: 480px) {
-    .album-title {
-        font-size: 32px;
-    }
-    
-    .album-art-container {
-        width: 200px;
-        height: 200px;
-    }
-    
-    .stat-value {
-        font-size: 22px;
-    }
-    
-    .controls-center {
-        gap: 16px;
-    }
-    
-    .control-btn.play-pause {
-        width: 56px;
-        height: 56px;
-    }
-}
-
-.context-menu {
+/* Mobile Overlay */
+.mobile-overlay {
     position: fixed;
-    background: rgba(30, 30, 45, 0.95);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--border-radius);
-    padding: 8px 0;
-    box-shadow: var(--shadow-lg);
-    z-index: 1000;
-    min-width: 200px;
-    opacity: 0;
-    transform: scale(0.95);
-    transition: all 0.2s ease;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+    backdrop-filter: blur(2px);
+    display: none;
 }
 
-.context-menu.show {
-    opacity: 1;
-    transform: scale(1);
-}
-
-.context-item {
-    padding: 12px 20px;
-    color: var(--galex-gray);
-    cursor: pointer;
-    transition: all var(--transition-speed) ease;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 14px;
-}
-
-.context-item:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--galex-white);
-    padding-left: 24px;
-}
-
-.hover-lift {
-    transition: transform var(--transition-speed) ease;
-}
-
-.hover-lift:hover {
-    transform: translateY(-4px);
-}
-
-.glass {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.fab {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 60px;
-    height: 60px;
-    background: var(--galex-gradient);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-    box-shadow: var(--shadow-lg);
-    transition: all var(--transition-speed) ease;
-    z-index: 100;
-}
-
-.fab:hover {
-    transform: scale(1.1) rotate(90deg);
-    box-shadow: 0 20px 40px rgba(29, 81, 185, 0.4);
+.mobile-overlay.active {
+    display: block;
 }
 </style>
 </head>
 <body>
-<div class="animated-background"></div>
-<div class="background-particles" id="particlesContainer"></div>
-
-<div class="loading-overlay" id="loadingOverlay">
-    <div class="loading-spinner"></div>
-    <h3 style="color: var(--galex-white); font-weight: 600;">Loading Galex Premium...</h3>
-</div>
+<div class="background-gradient"></div>
+<div class="background-pattern"></div>
+<div class="mobile-overlay" id="mobileOverlay"></div>
 
 <div class="app-container">
-    <div class="sidebar">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
         <div class="logo">
             <div class="logo-icon">G</div>
             <div class="logo-text">Galex</div>
+            <div class="big" id="sidebarToggle" title="Toggle sidebar"></div>
         </div>
-        
+
         <div class="nav-section">
             <div class="nav-menu">
                 <div class="nav-item active">
                     <div class="nav-icon"><i class="fas fa-home"></i></div>
                     <span>Home</span>
+                    <div class="toggle-label">Home</div>
                 </div>
                 <div class="nav-item">
                     <div class="nav-icon"><i class="fas fa-search"></i></div>
                     <span>Search</span>
+                    <div class="toggle-label">Search</div>
                 </div>
                 <div class="nav-item">
                     <div class="nav-icon"><i class="fas fa-book"></i></div>
-                    <span>Library</span>
+                    <span>Your Library</span>
+                    <div class="toggle-label">Your Library</div>
                 </div>
                 <div class="nav-item" id="spotifyConnectBtn">
                     <div class="nav-icon"><i class="fab fa-spotify"></i></div>
                     <span>Connect Spotify</span>
+                    <div class="toggle-label">Connect Spotify</div>
                 </div>
             </div>
         </div>
     </div>
     
+    <!-- Main Content -->
     <div class="main-content">
+        <!-- Top Bar -->
         <div class="top-bar">
             <div class="nav-controls">
-                <button class="nav-btn hover-lift" onclick="prevSong()">
+                <button class="nav-btn" onclick="prevSong()">
                     <i class="fas fa-step-backward"></i>
                 </button>
-                <button class="nav-btn hover-lift" onclick="nextSong()">
+                <button class="nav-btn" onclick="nextSong()">
                     <i class="fas fa-step-forward"></i>
                 </button>
             </div>
@@ -1234,7 +839,7 @@ body {
                        oninput="filterSongs(this.value)" id="searchInput">
             </div>
             
-            <div class="user-profile hover-lift" id="userProfile">
+            <div class="user-profile" id="userProfile">
                 <div class="user-avatar" id="userAvatar">U</div>
                 <span class="username" id="username">User</span>
             </div>
@@ -1242,10 +847,7 @@ body {
         
         <div class="now-playing">
             <div class="now-playing-header">
-                <h2>
-                    <i class="fas fa-music"></i>
-                    Now Playing
-                </h2>
+                <h2>Now Playing</h2>
                 <div class="wave-animation" id="waveAnimation" style="display: none;">
                     <div class="wave-bar"></div>
                     <div class="wave-bar"></div>
@@ -1257,7 +859,7 @@ body {
             
             <div class="album-info">
                 <div class="album-art-container">
-                    <img id="songImg" class="album-art" src="https://th.bing.com/th/id/OIP.3pJ7dpx_ajr_3Qm0WdOG2QHaFj?w=233&h=180" alt="Album Art">
+                    <img id="songImg" class="album-art" src="https://th.bing.com/th/id/OIP.UxLo1LAqrQ0AlgHNYtgcYwHaGJ?w=211&h=180&c=7&r=0&o=5&cb=ucfimg2&dpr=1.3&pid=1.7&ucfimg=1" alt="Album Art">
                 </div>
                 
                 <div class="album-details">
@@ -1266,39 +868,28 @@ body {
                     <div class="album-stats">
                         <div class="stat-item">
                             <div class="stat-label">Artist</div>
-                            <div class="stat-value">
-                                <i class="fas fa-user"></i>
-                                <span id="artistName">Artist</span>
-                            </div>
+                            <div class="stat-value" id="artistName">Artist</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-label">Music Director</div>
-                            <div class="stat-value">
-                                <i class="fas fa-compact-disc"></i>
-                                <span id="musicDirector">Director</span>
-                            </div>
+                            <div class="stat-value" id="musicDirector">Director</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-label">Year</div>
-                            <div class="stat-value">
-                                <i class="fas fa-calendar"></i>
-                                <span id="songYear">2024</span>
-                            </div>
+                            <div class="stat-value" id="songYear">2024</div>
                         </div>
                     </div>
                 </div>
             </div>
             
+            <!-- Playlist Section -->
             <div class="playlist-section">
                 <div class="playlist-header">
-                    <h3>
-                        <i class="fas fa-list-music"></i>
-                        Playlist
-                    </h3>
+                    <h3>Playlist</h3>
                     <div class="sort-options">
-                        <button class="sort-btn" onclick="sortSongs('name')">Title</button>
+                        <button class="sort-btn" onclick="sortSongs('title')">Title</button>
                         <button class="sort-btn" onclick="sortSongs('year')">Year</button>
-                        <button class="sort-btn active" onclick="sortSongs('artist')">Artist</button>
+                        <button class="sort-btn active" onclick="sortSongs('artists')">Artist</button>
                         <button class="sort-btn" onclick="sortSongs('music')">Director</button>
                     </div>
                 </div>
@@ -1324,144 +915,2257 @@ body {
             <div class="progress-container">
                 <span class="time-stamp" id="currentTime">0:00</span>
                 <div class="progress-bar" id="progressBar">
-                    <div class="progress-fill" id="progressFill">
-                        <div class="progress-handle"></div>
-                    </div>
+                    <div class="progress-fill" id="progressFill"></div>
                 </div>
                 <span class="time-stamp" id="duration">0:00</span>
             </div>
             
             <div class="controls-row">
                 <div class="controls-center">
-                    <button class="control-btn hover-lift" onclick="prevSong()" title="Previous">
+                    <button class="control-btn" onclick="prevSong()">
                         <i class="fas fa-step-backward"></i>
                     </button>
-                    <button class="control-btn play-pause hover-lift" onclick="playPause()" id="playBtn" title="Play/Pause">
+                    <button class="control-btn play-pause" onclick="playPause()" id="playBtn">
                         <i class="fas fa-play"></i>
                     </button>
-                    <button class="control-btn hover-lift" onclick="nextSong()" title="Next">
+                    <button class="control-btn" onclick="nextSong()">
                         <i class="fas fa-step-forward"></i>
                     </button>
-                </div>
-                
-                <div class="volume-control">
-                    <i class="fas fa-volume-up" style="color: var(--galex-gray);"></i>
-                    <div class="volume-slider" id="volumeSlider">
-                        <div class="volume-level" id="volumeLevel"></div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Toast Notification -->
 <div class="toast" id="toast"></div>
 
-<div class="context-menu" id="contextMenu">
-    <div class="context-item" onclick="addToQueue()">
-        <i class="fas fa-plus"></i>
-        <span>Add to Queue</span>
-    </div>
-    <div class="context-item" onclick="addToPlaylist()">
-        <i class="fas fa-list-music"></i>
-        <span>Add to Playlist</span>
-    </div>
-    <div class="context-item" onclick="shareSong()">
-        <i class="fas fa-share"></i>
-        <span>Share</span>
-    </div>
-</div>
-<div class="fab" id="floatingActionBtn" onclick="showQuickActions()">
-    <i class="fas fa-plus"></i>
-</div>
-
 <script>
+
 const playlist = [
-    {
-        src: "Aagaya Suriyanai - Harish Raghavendra, Harini.mp3",
-        img: "https://imgs.search.brave.com/Q5zayQ_Cu-59A30OLKV506-l6o8-HsCbHYVzO7UN9wA/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL00v/TVY1Qk9XVXlORE15/WlRndE5HUTNOeTAw/TkRRd0xUaG1ZVGt0/TWpsa1kySmxORGcz/WTJabFhrRXlYa0Zx/Y0djQC5qcGc",
-        name: "Aagaya Suriyanai",
-        album: "Album One",
-        year: 2002,
-        music: "Harris Jayaraj",
-        artist: "Harish Raghavendra",
-        duration: "3:45"
-    },
-    {
-        src: "Aaha Kalyanam - From  Petta  - Anthony Daasan.mp3",
-        img: "https://imgs.search.brave.com/DBWnzWSsMXVy4ffTIUeaob65Eo0sRkAERsQs6rO3Jgg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jLnNh/YXZuY2RuLmNvbS9h/cnRpc3RzL0FuaXJ1/ZGhfUmF2aWNoYW5k/ZXJfMDAyXzIwMjQw/MTAzMDY0NTU4XzUw/MHg1MDAuanBn",
-        name: "Aaha Kalyanam",
-        album: "Petta (Original Motion Picture Soundtrack)",
-        year: 2019,
-        music: "Anirudh",
-        artist: "Anthony Daasan",
-        duration: "4:20"
-    },
-    {
-        src: "Aai Mailapuru - Srikanth Deva, Manikka Vinayagam, Sabesh, Ganga, Suchitra.mp3",
-        img: "https://th.bing.com/th/id/OIP._O5RxCytnC2wEs91vkjlpgHaEK?w=266&h=180",
-        name: "Aai Mailapuru",
-        album: "Classical Collection",
-        year: 2004,
-        music: "Srikanth Deva",
-        artist: "Manikka Vinayagam",
-        duration: "5:10"
-    },
-    {
-        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-        img: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-        name: "Melody Waves",
-        album: "Modern Vibes",
-        year: 2020,
-        music: "Yuvan Shankar",
-        artist: "Sid Sriram",
-        duration: "4:05"
-    },
-    {
-        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-        img: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-        name: "Rhythm Divine",
-        album: "Eternal Beats",
-        year: 2018,
-        music: "A.R. Rahman",
-        artist: "Shreya Ghoshal",
-        duration: "3:55"
-    },
-    {
-        src: "Aala Asatthum - S. P. Balasubrahmanyam, Vani Jairam.mp3",
-        img: "https://imgs.search.brave.com/HLoz5a15uQERXDF1cuqlE50fu_VcG-IHHslmaQV1PnA/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pbnNpZGVyLmlu/L2ltYWdlL3VwbG9h/ZC9jX2Nyb3AsZ19j/dXN0b20vdjE3MzIx/Njc0ODgvY2t4cWlv/bngzN3NiOHF2d2tp/enkuanBn",
-        name: "Aala Asatthum",
-        album: "Kanni Rasi",
-        year: 1985,
-        music: "Ilaiyaraaja",
-        artist: "S. P. Balasubrahmanyam",
-        duration: "4:30"
-    },
-    {
-        src: "Aaluma Doluma - Anirudh Ravichander, Badshah.mp3",
-        img: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-        name: "Aaluma Doluma",
-        album: "vethalam",
-        year: 2015,
-        music: "Anirudh Ravichander",
-        artist: "Anirudh Ravichander",
-        duration: "4:30"
-    },
-    {
-        src: "Aariya Udhadugal - Hariharan, Swarnalatha.mp3",
-        img: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-        name: "Aariya Udhadugal",
-        album: "Chellamae",
-        year: 2004,
-        music: "Harris Jayaraj",
-        artist: "Hariharan, Swarnalatha",
-        duration: "4:30"
-    }
+  {
+    id: 1,
+    title: "Aagaya Suriyanai",
+    artists: "Harish Raghavendra, Harini",
+    src: "Aagaya Suriyanai - Harish Raghavendra, Harini.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 2,
+    title: "Aaha Kalyanam",
+    artists: "Anthony Daasan",
+    src: "Aaha Kalyanam - From  Petta  - Anthony Daasan.mp3",
+    musicDirector: "Anirudh Ravichander",
+    movie: "Petta",
+    year: "2019"
+  },
+  {
+    id: 3,
+    title: "Aai Mailapuru",
+    artists: "Srikanth Deva, Manikka Vinayagam, Sabesh, Ganga, Suchitra",
+    src: "Aai Mailapuru - Srikanth Deva, Manikka Vinayagam, Sabesh, Ganga, Suchitra.mp3",
+    musicDirector: "Srikanth Deva",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 4,
+    title: "Aala Asatthum",
+    artists: "S. P. Balasubrahmanyam, Vani Jairam",
+    src: "Aala Asatthum - S. P. Balasubrahmanyam, Vani Jairam.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 5,
+    title: "Aaluma Doluma",
+    artists: "Anirudh Ravichander, Badshah",
+    src: "Aaluma Doluma - Anirudh Ravichander, Badshah.mp3",
+    musicDirector: "Anirudh Ravichander",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 6,
+    title: "Aariya Udhadugal",
+    artists: "Hariharan, Swarnalatha",
+    src: "Aariya Udhadugal - Hariharan, Swarnalatha.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 7,
+    title: "Aasa Kooda",
+    artists: "Sai Abhyankkar, Sai Smriti",
+    src: "Aasa Kooda - From Think Indie - Sai Abhyankkar, Sai Smriti.mp3",
+    musicDirector: "Unknown",
+    movie: "Think Indie",
+    year: "Unknown"
+  },
+  {
+    id: 8,
+    title: "Aasai Dhosai",
+    artists: "Priya Subramaniam",
+    src: "Aasai Dhosai - Priya Subramaniam.m4a",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 9,
+    title: "Aasai Nooruvagai",
+    artists: "Malaysia Vasudevan",
+    src: "Aasai Nooruvagai - Malaysia Vasudevan.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 10,
+    title: "Aathangara Orathil",
+    artists: "Harris Jayaraj, Gana Bala, MC Vickey",
+    src: "Aathangara Orathil - Harris Jayaraj, Gana Bala, MC Vickey.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 11,
+    title: "Aathangarai Maramea Adhil",
+    artists: "Mano, Sujatha",
+    src: "Aathangarai Maramea Adhil - Mano, Sujatha.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 12,
+    title: "Aathi",
+    artists: "Anirudh Ravichander, Vishal Dadlani",
+    src: "Aathi (From Kaththi ) - Anirudh Ravichander, Vishal Dadlani.mp3",
+    musicDirector: "Anirudh Ravichander",
+    movie: "Kaththi",
+    year: "2014"
+  },
+  {
+    id: 13,
+    title: "Aathichoodi",
+    artists: "Vijay Antony, Dinesh",
+    src: "Aathichoodi - Vijay Antony, Dinesh.m4a",
+    musicDirector: "Vijay Antony",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 14,
+    title: "Aayiram Jannal Veedu",
+    artists: "Yuvan Shankar Raja, Premgi Amaren, Vadivelu, Rahul",
+    src: "Aayiram Jannal Veedu - Yuvan Shankar Raja, Premgi Amaren, Vadivelu, Rahul.mp3",
+    musicDirector: "Yuvan Shankar Raja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 15,
+    title: "Aazh Kadalil",
+    artists: "S. P. Balasubrahmanyam",
+    src: "Aazh Kadalil - S. P. Balasubrahmanyam.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 16,
+    title: "Achcho",
+    artists: "Udit Narayan, Kavita Krishnamurthy",
+    src: "Achcho - Udit Narayan, Kavita Krishnamurthy.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 17,
+    title: "Ada All Thotta Boopathi",
+    artists: "Mani Sharma, Kabilan, Shankar Mahadevan",
+    src: "Ada All Thotta Boopathi (From Youth ) - Mani Sharma, Kabilan, Shankar Mahadevan.mp3",
+    musicDirector: "Mani Sharma",
+    movie: "Youth",
+    year: "Unknown"
+  },
+  {
+    id: 18,
+    title: "Ada Ennaththa Solvenungo",
+    artists: "Udit Narayan, Anuradha Sriram",
+    src: "Ada Ennaththa Solvenungo (From Sivakasi ) - Udit Narayan, Anuradha Sriram.mp3",
+    musicDirector: "Unknown",
+    movie: "Sivakasi",
+    year: "2005"
+  },
+  {
+    id: 19,
+    title: "Adada Adada",
+    artists: "Siddharth, Devi Sri Prasad",
+    src: "Adada Adada - Siddharth, Devi Sri Prasad.mp3",
+    musicDirector: "Devi Sri Prasad",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 20,
+    title: "Adada Mazhaida",
+    artists: "Yuvan Shankar Raja, Rahul Nambiar, Saindhavi",
+    src: "Adada Mazhaida - Yuvan Shankar Raja, Rahul Nambiar, Saindhavi.mp3",
+    musicDirector: "Yuvan Shankar Raja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 21,
+    title: "Adangaatha Asuran",
+    artists: "A.R. Rahman, Dhanush",
+    src: "Adangaatha Asuran (From Raayan ) - A.R. Rahman, Dhanush.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Raayan",
+    year: "2024"
+  },
+  {
+    id: 22,
+    title: "Adhikalaiyil Shevalai",
+    artists: "Unnikrishnan, Chitra",
+    src: "Adhikalaiyil Shevalai - Unnikrishnan, Chitra.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 23,
+    title: "Adi Aasa Machan",
+    artists: "Swarnalatha",
+    src: "Adi Aasa Machan - Swarnalatha.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 24,
+    title: "Adiyae Azhagae",
+    artists: "Justin Prabhakaran",
+    src: "Adiyae Azhagae - From Oru Naal Koothu - Justin Prabhakaran.mp3",
+    musicDirector: "Justin Prabhakaran",
+    movie: "Oru Naal Koothu",
+    year: "2016"
+  },
+  {
+    id: 25,
+    title: "Adiyae Kolluthey",
+    artists: "Harris Jayaraj, Krishh, Benny Dayal, Shruti Haasan",
+    src: "Adiyae Kolluthey - Harris Jayaraj, Krishh, Benny Dayal, Shruti Haasan.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 26,
+    title: "Adiye",
+    artists: "Dhibu Ninan Thomas, Kapil Kapilan",
+    src: "Adiye - From Bachelor - Dhibu Ninan Thomas, Kapil Kapilan.mp3",
+    musicDirector: "Dhibu Ninan Thomas",
+    movie: "Bachelor",
+    year: "2021"
+  },
+  {
+    id: 27,
+    title: "Adiye Adi Chinnapulla",
+    artists: "S. P. Balasubrahmanyam, S. Janaki",
+    src: "Adiye Adi Chinnapulla - S. P. Balasubrahmanyam, S. Janaki.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 28,
+    title: "Adiye Manam Nilluna",
+    artists: "S. P. Balasubrahmanyam, S. Janaki",
+    src: "Adiye Manam Nilluna - S. P. Balasubrahmanyam, S. Janaki.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 29,
+    title: "Adiyile Sethi Solli",
+    artists: "K. S. Chithra",
+    src: "Adiyile Sethi Solli - K. S. Chithra.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 30,
+    title: "Aga Naga",
+    artists: "Harris Jayaraj, Vijay Prakash, Tippu, Ranina Reddy, Solar Sai, Priya Subramanian",
+    src: "Aga Naga - Harris Jayaraj, Vijay Prakash, Tippu, Ranina Reddy, Solar Sai, Priya Subramanian.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 31,
+    title: "Aga Naga",
+    artists: "A.R. Rahman, Shakthisree Gopalan",
+    src: "Aga Naga (From Ponniyin Selvan Part-2) - A.R. Rahman, Shakthisree Gopalan.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Ponniyin Selvan Part-2",
+    year: "2023"
+  },
+  {
+    id: 32,
+    title: "Akkadannu Naanga Udai Potta",
+    artists: "Swarnalatha",
+    src: "Akkadannu Naanga Udai Potta - Swarnalatha.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 33,
+    title: "Akkam Pakkam",
+    artists: "Sadhana Sargam",
+    src: "Akkam Pakkam - Sadhana Sargam.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 34,
+    title: "Alaikaa Laikaa",
+    artists: "Javed Ali, Sayanora Philip, Sharmila",
+    src: "Alaikaa Laikaa - Javed Ali, Sayanora Philip, Sharmila.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 35,
+    title: "Ale Ale",
+    artists: "Karthik, A.R. Rahman, Chitra Sivaraman, Kabilan",
+    src: "Ale Ale - Karthik, A.R. Rahman, Chitra Sivaraman, Kabilan.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 36,
+    title: "Allegro",
+    artists: "Devi Sri Prasad, Rita Thyagarajan",
+    src: "Allegro - Devi Sri Prasad, Rita Thyagarajan.mp3",
+    musicDirector: "Devi Sri Prasad",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 37,
+    title: "Amaithikku Peyarthaan",
+    artists: "T. M. Soundararajan",
+    src: "Amaithikku Peyarthaan - T. M. Soundararajan.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 38,
+    title: "America Yendralum",
+    artists: "Naveen, Manikkam Vbinayakam, Kuppusamy, Viveka",
+    src: "America Yendralum - Naveen, Manikkam Vbinayakam, Kuppusamy, Viveka.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 39,
+    title: "Ammadi Aathadi",
+    artists: "Silambarasan TR, Mahathi, Suchitra, T. Rajendar",
+    src: "Ammadi Aathadi - Silambarasan TR, Mahathi, Suchitra, T. Rajendar.mp3",
+    musicDirector: "T. Rajendar",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 40,
+    title: "Ammadi Idhuthan Kathala",
+    artists: "S. P. Balasubrahmanyam, K. S.Chithra",
+    src: "Ammadi Idhuthan Kathala (From Ethu Namma Aalu ) - S. P. Balasubrahmanyam, K. S.Chithra.mp3",
+    musicDirector: "Unknown",
+    movie: "Ethu Namma Aalu",
+    year: "Unknown"
+  },
+  {
+    id: 41,
+    title: "Anbae Anbae",
+    artists: "Hariharan, Anuradha Sriram, Vairamuthu",
+    src: "Anbae Anbae - Hariharan, Anuradha Sriram, Vairamuthu.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 42,
+    title: "Anbe En Anbe",
+    artists: "Harris Jayaraj, Harish Raghavendra, Na.Muthukumar",
+    src: "Anbe En Anbe - Harris Jayaraj, Harish Raghavendra, Na.Muthukumar.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 43,
+    title: "Anbe Sivam",
+    artists: "Vidyasagar, Kamal Haasan, Karthik",
+    src: "Anbe Sivam - Vidyasagar, Kamal Haasan, Karthik.mp3",
+    musicDirector: "Vidyasagar",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 44,
+    title: "Anbenum",
+    artists: "Anirudh Ravichander, Lothika",
+    src: "Anbenum (From Leo ) - Anirudh Ravichander, Lothika.mp3",
+    musicDirector: "Anirudh Ravichander",
+    movie: "Leo",
+    year: "2023"
+  },
+  {
+    id: 45,
+    title: "Anbulla Mannavane",
+    artists: "Mano, Swarnalatha",
+    src: "Anbulla Mannavane - Mano, Swarnalatha.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 46,
+    title: "Andangakka",
+    artists: "Harris Jayaraj, Jassie Gift, KK, Shreya Ghoshal, Saindhavi, Vairamuthu",
+    src: "Andangakka - Harris Jayaraj, Jassie Gift, KK, Shreya Ghoshal, Saindhavi, Vairamuthu.m4a",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 47,
+    title: "Andangakka",
+    artists: "KK, Jassie Gift, Shreya Ghoshal, Saindhavi",
+    src: "Andangakka - KK, Jassie Gift, Shreya Ghoshal, Saindhavi.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 48,
+    title: "Andha Arabi Kadaloram",
+    artists: "A.R. Rahman, Suresh Peters, Swarnalatha",
+    src: "Andha Arabi Kadaloram - A.R. Rahman, Suresh Peters, Swarnalatha.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 49,
+    title: "Andha Kandamani",
+    artists: "Ilaiyaraaja, Kamal Haasan",
+    src: "Andha Kandamani - Ilaiyaraaja, Kamal Haasan.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 50,
+    title: "Andhi Mazhai Pozhikaruthu",
+    artists: "S. P. Balasubrahmanyam, S. Janaki",
+    src: "Andhi Mazhai Pozhikaruthu - S. P. Balasubrahmanyam, S. Janaki.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 51,
+    title: "Andhiyila Vaanam",
+    artists: "Swarnalatha, Mano",
+    src: "Andhiyila Vaanam (From Chinnavar ) - Swarnalatha, Mano.mp3",
+    musicDirector: "Unknown",
+    movie: "Chinnavar",
+    year: "Unknown"
+  },
+  {
+    id: 52,
+    title: "Anjali Anjali",
+    artists: "A.R. Rahman, K. S. Chithra, S. P. Balasubrahmanyam",
+    src: "Anjali Anjali - A.R. Rahman, K. S. Chithra, S. P. Balasubrahmanyam.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 53,
+    title: "Anjali Anjali",
+    artists: "S. P. Balasubrahmanyam, K. S. Chithra",
+    src: "Anjali Anjali - S. P. Balasubrahmanyam, K. S. Chithra.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 54,
+    title: "Anna Nagar Aandalu",
+    artists: "Sabesh",
+    src: "Anna Nagar Aandalu - Sabesh.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 55,
+    title: "Annaaththe Aaduraar",
+    artists: "S. P. Balasubrahmanyam",
+    src: "Annaaththe Aaduraar - S. P. Balasubrahmanyam.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 56,
+    title: "Annanoda Paatu",
+    artists: "Kay Kay, Karthik",
+    src: "Annanoda Paatu - Kay Kay, Karthik.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 57,
+    title: "Annul Maelae",
+    artists: "Harris Jayaraj, Sudha Ragunathan",
+    src: "Annul Maelae - Harris Jayaraj, Sudha Ragunathan.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 58,
+    title: "Anthaathi",
+    artists: "Govind Vasantha, Chinmayi, Bhadra Rajin, M. Nassar",
+    src: "Anthaathi - Govind Vasantha, Chinmayi, Bhadra Rajin, M. Nassar.mp3",
+    musicDirector: "Govind Vasantha",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 59,
+    title: "Appadipodu",
+    artists: "KK, Anuradha Sriram",
+    src: "Appadipodu (From Gilli ) - KK, Anuradha Sriram.mp3",
+    musicDirector: "Vidyasagar",
+    movie: "Gilli",
+    year: "2004"
+  },
+  {
+    id: 60,
+    title: "Appan Panna",
+    artists: "Pushpavanam Kuppusamy, Anuradha Sriram",
+    src: "Appan Panna - Pushpavanam Kuppusamy, Anuradha Sriram.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 61,
+    title: "April Maathathil",
+    artists: "Deva, Unnikrishnan, Harini",
+    src: "April Maathathil (From Vaalee ) - Deva, Unnikrishnan, Harini.mp3",
+    musicDirector: "Deva",
+    movie: "Vaalee",
+    year: "1999"
+  },
+  {
+    id: 62,
+    title: "Araro Thai Pada",
+    artists: "K. J. Yesudas",
+    src: "Araro Thai Pada - K. J. Yesudas.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 63,
+    title: "Vaa Vennila Unnaithane",
+    artists: "S. P. Balasubrahmanyam, P. Susheela",
+    src: "Vaa Vennila Unnaithane (From Mella Thirandhadhu Kadhavu ) - S. P. Balasubrahmanyam P. Susheela.mp3",
+    musicDirector: "Unknown",
+    movie: "Mella Thirandhadhu Kadhavu",
+    year: "Unknown"
+  },
+  {
+    id: 64,
+    title: "Vaadi Pulla Vaadi",
+    artists: "Hiphop Tamizha",
+    src: "Vaadi Pulla Vaadi - Hiphop Tamizha.mp3",
+    musicDirector: "Hiphop Tamizha",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 65,
+    title: "Vaaji Vaaji",
+    artists: "Hariharan, Madhusree, Chorus",
+    src: "Vaaji Vaaji - Hariharan, Madhusree, Chorus.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 66,
+    title: "Vaan Engum Nee Minna",
+    artists: "Harris Jayaraj, Aalaap Raju, Harini, Devan Ekambaram, Pravin Saivi, Madhan Karky",
+    src: "Vaan Engum Nee Minna - Harris Jayaraj, Aalaap Raju, Harini, Devan Ekambaram, Pravin Saivi, Madhan Karky.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 67,
+    title: "Vaarayo Vaarayo",
+    artists: "Harris Jayaraj, Unnikrishnan, Chinmayi, Mega",
+    src: "Vaarayo Vaarayo - Harris Jayaraj, Unnikrishnan, Chinmayi, Mega.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 68,
+    title: "Vaasamilla",
+    artists: "S. P. Balasubrahmanyam",
+    src: "Vaasamilla - S. P. Balasubrahmanyam.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 69,
+    title: "Vaathi Coming",
+    artists: "Anirudh Ravichander, Gana Balachandar",
+    src: "Vaathi Coming - Anirudh Ravichander, Gana Balachandar.mp3",
+    musicDirector: "Anirudh Ravichander",
+    movie: "Master",
+    year: "2021"
+  },
+  {
+    id: 70,
+    title: "Vacchuka Vacchukava",
+    artists: "Srikanth Deva, KK, Srilekha Parthasarathy",
+    src: "Vacchuka Vacchukava - Srikanth Deva, KK, Srilekha Parthasarathy.mp3",
+    musicDirector: "Srikanth Deva",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 71,
+    title: "Vagai Karai Katre",
+    artists: "K. J. Yesudas",
+    src: "Vagai Karai Katre - K. J. Yesudas.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 72,
+    title: "Vai Raja Vai",
+    artists: "Srinivas, Pop Shalini",
+    src: "Vai Raja Vai - Srinivas, Pop Shalini.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 73,
+    title: "Valaiyosai",
+    artists: "Ilaiyaraaja, S. P. Balasubrahmanyam, Lata Mangeshkar",
+    src: "Valaiyosai - Ilaiyaraaja, S. P. Balasubrahmanyam, Lata Mangeshkar.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 74,
+    title: "Valaiyosai Kalakala",
+    artists: "Lata Mangeshkar",
+    src: "Valaiyosai Kalakala - Lata Mangeshkar.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 75,
+    title: "ValamenuKkum",
+    artists: "Gana Ulaganathan",
+    src: "ValamenuKkum - Gana Ulaganathan.m4a",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 76,
+    title: "Valayapatti",
+    artists: "Naresh lyer, Ujjayinee, Madhumitha",
+    src: "Valayapatti - Naresh lyer, Ujjayinee, Madhumitha.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 77,
+    title: "Varriyaa",
+    artists: "Narayan, Naveen Madhav, Ranjith Govind, Vasu",
+    src: "Varriyaa - Night Life - Narayan, Naveen Madhav, Ranjith Govind, Vasu.mp3",
+    musicDirector: "Unknown",
+    movie: "Night Life",
+    year: "Unknown"
+  },
+  {
+    id: 78,
+    title: "Vasantham Paadi Vara Male",
+    artists: "S. P. Balasubrahmanyam",
+    src: "Vasantham Paadi Vara Male - S. P. Balasubrahmanyam.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 79,
+    title: "Vaseegara",
+    artists: "Bombay Jayashri",
+    src: "Vaseegara - Bombay Jayashri.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 80,
+    title: "Vechukkava",
+    artists: "Yuvan Shankar Raja, Silambarasan TR, Suchitra",
+    src: "Vechukkava (From Silambattam ) - Remix - Yuvan Shankar Raja, Silambarasan TR, Suchitra.mp3",
+    musicDirector: "Yuvan Shankar Raja",
+    movie: "Silambattam",
+    year: "Unknown"
+  },
+  {
+    id: 81,
+    title: "Vellai Maiyil",
+    artists: "Yuvan Shankar Raja, Udit Narayan, Shweta Mohan",
+    src: "Vellai Maiyil - Yuvan Shankar Raja, Udit Narayan, Shweta Mohan.mp3",
+    musicDirector: "Yuvan Shankar Raja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 82,
+    title: "Vellaikara Mutham",
+    artists: "Malathy Laxman",
+    src: "Vellaikara Mutham - Malathy Laxman.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 83,
+    title: "Velli Malare",
+    artists: "S. P. Balasubrahmanyam, Mahalakshmi lyer",
+    src: "Velli Malare (From Jodi ) - S. P. Balasubrahmanyam, Mahalakshmi lyer.mp3",
+    musicDirector: "Unknown",
+    movie: "Jodi",
+    year: "1999"
+  },
+  {
+    id: 84,
+    title: "Velli Velli",
+    artists: "Mano, Amrutha",
+    src: "Velli Velli (From Thadayam) - Mano, Amrutha.mp3",
+    musicDirector: "Unknown",
+    movie: "Thadayam",
+    year: "Unknown"
+  },
+  {
+    id: 85,
+    title: "Vengamavan",
+    artists: "Hiphop Tamizha, Chinna Ponnu",
+    src: "Vengamavan - Hiphop Tamizha, Chinna Ponnu.mp3",
+    musicDirector: "Hiphop Tamizha",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 86,
+    title: "Vennilave",
+    artists: "Hariharan, Bombay Jayashri",
+    src: "Vennilave - Hariharan, Bombay Jayashri.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Minsara Kanavu",
+    year: "1997"
+  },
+  {
+    id: 87,
+    title: "Vennilavu Saaral",
+    artists: "Kapil Kapilan, Rakshita Suresh, Yugabharathi",
+    src: "Vennilavu Saaral - Kapil Kapilan, Rakshita Suresh, Yugabharathi.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 88,
+    title: "Verenna (Ivan Yaro)",
+    artists: "P. Unnikrishnan, Harini",
+    src: "Verenna (Ivan Yaro) - P. Unnikrishnan, Harini.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 89,
+    title: "Verenna (Ivan Yaro)",
+    artists: "Unnikrishnan, Harini",
+    src: "Verenna (Ivan Yaro) - Unnikrishnan, Harini.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 90,
+    title: "Vethalaiya Potendi",
+    artists: "Yuvan Shankar Raja, Shankar Mahadevan",
+    src: "Vethalaiya Potendi - Yuvan Shankar Raja, Shankar Mahadevan.mp3",
+    musicDirector: "Yuvan Shankar Raja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 91,
+    title: "Veyyon Silli",
+    artists: "G. V. Prakash, Harish Sivaramakrishnan",
+    src: "Veyyon Silli (From Soorarai Pottru ) - G. V. Prakash, Harish Sivaramakrishnan.mp3",
+    musicDirector: "G. V. Prakash",
+    movie: "Soorarai Pottru",
+    year: "2020"
+  },
+  {
+    id: 92,
+    title: "Vidala Pulla",
+    artists: "Ilaiyaraaja, Swarnalatha",
+    src: "Vidala Pulla - Ilaiyaraaja, Swarnalatha.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 93,
+    title: "Villadi Villan",
+    artists: "Mano, Malathi",
+    src: "Villadi Villan - Mano, Malathi.m4a",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 94,
+    title: "Vinnathaandi Varuvaayaa",
+    artists: "A.R. Rahman, Karthik, Vivek Agrawal",
+    src: "Vinnathaandi Varuvaayaa - A.R. Rahman, Karthik, Vivek Agrawal.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 95,
+    title: "Vizhi Moodi",
+    artists: "Karthik, Prashanthini",
+    src: "Vizhi Moodi - Karthik, Prashanthini.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 96,
+    title: "Vizhigal Meydaiyam Imaigal",
+    artists: "Kalyan, S. Janaki",
+    src: "Vizhigal Meydaiyam Imaigal - Kalyan, S. Janaki.mp3",
+    musicDirector: "Kalyan",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 97,
+    title: "Vizhigalil Vizhigalil",
+    artists: "Harish Raghavendra",
+    src: "Vizhigalil Vizhigalil - Harish Raghavendra.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 98,
+    title: "Vizhiyil",
+    artists: "Sonu Nigam, Swetha",
+    src: "Vizhiyil - Sonu Nigam, Swetha.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 99,
+    title: "Voda Voda Voda",
+    artists: "Dhanush",
+    src: "Voda Voda Voda - Dhanush.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 100,
+    title: "Water Packet",
+    artists: "A.R. Rahman, Santhosh Narayanan, Shweta Mohan, Gana Kadhar",
+    src: "Water Packet (From Raayan ) - A.R. Rahman, Santhosh Narayanan, Shweta Mohan, Gana Kadhar.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Raayan",
+    year: "2024"
+  },
+  {
+    id: 101,
+    title: "Where Is the Party",
+    artists: "Yuvan Shankar Raja, Mukesh, Priyadharshini",
+    src: "Where Is the Party (From Silambattam ) - Yuvan Shankar Raja, Mukesh, Priyadharshini.mp3",
+    musicDirector: "Yuvan Shankar Raja",
+    movie: "Silambattam",
+    year: "2008"
+  },
+  {
+    id: 102,
+    title: "Whistle Podu",
+    artists: "Thalapathy Vijay, Yuvan Shankar Raja, Madan Karky",
+    src: "Whistle Podu (From The Greatest Of All Time ) - Thalapathy Vijay, Yuvan Shankar Raja, Madan Karky.mp3",
+    musicDirector: "Yuvan Shankar Raja",
+    movie: "The Greatest Of All Time",
+    year: "2024"
+  },
+  {
+    id: 103,
+    title: "Yaakkai Thiri",
+    artists: "A.R. Rahman, Sunitha Sarathy, Pop Shalini",
+    src: "Yaakkai Thiri - A.R. Rahman, Sunitha Sarathy, Pop Shalini.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 104,
+    title: "Yaar Indha Saalai Oram",
+    artists: "G. V. Prakash, Saindhavi",
+    src: "Yaar Indha Saalai Oram - G. V. Prakash, Saindhavi.mp3",
+    musicDirector: "G. V. Prakash",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 105,
+    title: "Yaar Intha",
+    artists: "Haricharan",
+    src: "Yaar Intha - Haricharan.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 106,
+    title: "Yaaro",
+    artists: "S. P. Balasubrahmanyam, K. S. Chithra",
+    src: "Yaaro (From Chennai-600028) - Duet Version - S. P. Balasubrahmanyam, K. S. Chithra.mp3",
+    musicDirector: "Yuvan Shankar Raja",
+    movie: "Chennai-600028",
+    year: "2007"
+  },
+  {
+    id: 107,
+    title: "Yaaro Manathile",
+    artists: "Harris Jayaraj, Bombay Jayashri, Krish",
+    src: "Yaaro Manathile - Harris Jayaraj, Bombay Jayashri, Krish.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 108,
+    title: "Yaarumey Venam",
+    artists: "Hiphop Tamizha",
+    src: "Yaarumey Venam - Hiphop Tamizha.mp3",
+    musicDirector: "Hiphop Tamizha",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 109,
+    title: "Yaeley Yaeley Maruthu",
+    artists: "D. Imman, Sooraj Santhosh",
+    src: "Yaeley Yaeley Maruthu - D. Imman, Sooraj Santhosh.mp3",
+    musicDirector: "D. Imman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 110,
+    title: "Yaen Pirandaen",
+    artists: "Mano",
+    src: "Yaen Pirandaen (From Anandha Mazhai) - Mano.mp3",
+    musicDirector: "Unknown",
+    movie: "Anandha Mazhai",
+    year: "Unknown"
+  },
+  {
+    id: 111,
+    title: "Yamma Yamma",
+    artists: "Harris Jayaraj, S. P. Balasubrahmanyam",
+    src: "Yamma Yamma - Harris Jayaraj, S. P. Balasubrahmanyam.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 112,
+    title: "Yapang Chupang",
+    artists: "Shankar Mahadevan",
+    src: "Yapang Chupang ( From Jithan ) - Shankar Mahadevan.m4a",
+    musicDirector: "Yuvan Shankar Raja",
+    movie: "Jithan",
+    year: "2005"
+  },
+  {
+    id: 113,
+    title: "Yaro Yarodi",
+    artists: "Mahalakshmi lyer, Vaishali, Richa Sharma",
+    src: "Yaro Yarodi - Mahalakshmi lyer, Vaishali, Richa Sharma.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 114,
+    title: "Yathe Yathe",
+    artists: "G. V. Prakash",
+    src: "Yathe Yathe - G. V. Prakash.mp3",
+    musicDirector: "G. V. Prakash",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 115,
+    title: "Yealae Yealae Dosthu Da",
+    artists: "Harris Jayaraj, Krishh, Naresh lyer, Krishna lyer",
+    src: "Yealae Yealae Dosthu Da - Harris Jayaraj, Krishh, Naresh lyer, Krishna lyer.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 116,
+    title: "Yedhane Koiyakae",
+    artists: "Harris Jayaraj, Krishh, Benny Dayal, Bhargavi Pillai",
+    src: "Yedhane Koiyakae - Harris Jayaraj, Krishh, Benny Dayal, Bhargavi Pillai.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 117,
+    title: "Yedho Ondru",
+    artists: "Harish Raghavendra, Srilekha Parthasarathy, Franco Simon",
+    src: "Yedho Ondru - Harish Raghavendra, Srilekha Parthasarathy, Franco Simon.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 118,
+    title: "Yedho Ondru",
+    artists: "Harris Jayaraj, Harish Raghavendra, Srilekha Parthasarathy, Franko",
+    src: "Yedho Ondru - Harris Jayaraj, Harish Raghavendra, Srilekha Parthasarathy, Franko.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 119,
+    title: "Yedo Yedo",
+    artists: "Karthik, Gopika Poornima",
+    src: "Yedo Yedo - Karthik;Gopika Poornima.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 120,
+    title: "Yellae Lama",
+    artists: "Harris Jayaraj, Vijay Prakash, Karthik, Shruti Haasan, Pop Shalini",
+    src: "Yellae Lama - Harris Jayaraj, Vijay Prakash, Karthik, Shruti Haasan, Pop Shalini.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 121,
+    title: "Yen Chellaperu Apple",
+    artists: "A.V.Ramanan, Suchitra",
+    src: "Yen Chellaperu Apple - A.V.Ramanan Suchitra.mp3",
+    musicDirector: "Mani Sharma",
+    movie: "Pokkiri",
+    year: "2007"
+  },
+  {
+    id: 122,
+    title: "Yethi Yethi",
+    artists: "Harris Jayaraj, Benny Dayal, Naresh lyer, Solar Sai",
+    src: "Yethi Yethi - Harris Jayaraj, Benny Dayal, Naresh lyer, Solar Sai.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 123,
+    title: "Seena Thana",
+    artists: "Grace, Bharadwaj, Vairamuthu",
+    src: "Seena Thana - Bharadwaj, Vairamuthu, Grace.m4a",
+    musicDirector: "Bharadwaj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 124,
+    title: "Seevi Sinukkeduthu",
+    artists: "Malaysia Vasudevan, S. Janaki",
+    src: "Seevi Sinukkeduthu - Malaysia Vasudevan, S. Janaki.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 125,
+    title: "September Madham",
+    artists: "Asha Bhosle, Shankar Mahadevan",
+    src: "September Madham - Asha Bhosle, Shankar Mahadevan.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 126,
+    title: "Seval Kodi",
+    artists: "Yuvan Shankar Raja, Vijay Yesudas",
+    src: "Seval Kodi - Yuvan Shankar Raja, Vijay Yesudas.mp3",
+    musicDirector: "Yuvan Shankar Raja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 127,
+    title: "Sexy Lady",
+    artists: "Vijay Antony, MK Balaji, Sheba, Maya lyer, Ramya",
+    src: "Sexy Lady - Vijay Antony, MK Balaji, Sheba, Maya lyer, Ramya.mp3",
+    musicDirector: "Vijay Antony",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 128,
+    title: "Sha La La",
+    artists: "Sunidhi Chauhan",
+    src: "Sha La La (From Gilli ) - Sunidhi Chauhan.mp3",
+    musicDirector: "Vidyasagar",
+    movie: "Gilli",
+    year: "2004"
+  },
+  {
+    id: 129,
+    title: "Shenbagame Shenbagame",
+    artists: "Mano, Ilaiyaraaja",
+    src: "Shenbagame Shenbagame - Duet Version - Mano, Ilaiyaraaja.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 130,
+    title: "Silendra Theepori",
+    artists: "Sujatha",
+    src: "Silendra Theepori - Sujatha.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 131,
+    title: "Single Pasanga",
+    artists: "Hiphop Tamizha, Gana Balachanda, Gana Ulagam Dharani, Arivu",
+    src: "Single Pasanga - Hiphop Tamizha, Gana Balachanda, Gana Ulagam Dharani, Arivu.mp3",
+    musicDirector: "Hiphop Tamizha",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 132,
+    title: "Siragugal",
+    artists: "Javed Ali, Yuvan Shankar Raja, Madhushree, Pa. Vijay",
+    src: "Siragugal - Javed Ali, Yuvan Shankar Raja, Madhushree, Pa. Vijay.mp3",
+    musicDirector: "Yuvan Shankar Raja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 133,
+    title: "Sirukki Vaasam",
+    artists: "Santhosh Narayanan, Anand Aravindakshan, Shweta Mohan",
+    src: "Sirukki Vaasam - Santhosh Narayanan, Anand Aravindakshan, Shweta Mohan.mp3",
+    musicDirector: "Santhosh Narayanan",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 134,
+    title: "Sivakami Nenappinilae",
+    artists: "S. P. Balasubrahmanyam, S. Janaki",
+    src: "Sivakami Nenappinilae (From Kilipetchu Ketkava ) - S. P. Balasubrahmanyam, S. Janaki.mp3",
+    musicDirector: "Unknown",
+    movie: "Kilipetchu Ketkava",
+    year: "Unknown"
+  },
+  {
+    id: 135,
+    title: "Smiyai",
+    artists: "Devan Ekambaram, Clinton Cerejo, Dominique Cerejo",
+    src: "Smiyai - Devan Ekambaram, Clinton Cerejo, Dominique Cerejo.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 136,
+    title: "Snehidhane",
+    artists: "Sadhana Sargam, Srinivas",
+    src: "Snehidhane - Sadhana Sargam, Srinivas.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Alaipayuthey",
+    year: "2000"
+  },
+  {
+    id: 137,
+    title: "Solaigal Ellaam Pookalai Thoova",
+    artists: "T.Rajendran, S. P. Balasubrahmanyam, K. S. Chithra",
+    src: "Solaigal Ellaam Pookalai Thoova (Version 2) - T.Rajendran, S. P. Balasubrahmanyam, K. S. Chithra.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 138,
+    title: "Solli Tholaiyen Ma",
+    artists: "Yuvan Shankar Raja, Dhanush",
+    src: "Solli Tholaiyen Ma - Yuvan Shankar Raja, Dhanush.mp3",
+    musicDirector: "Yuvan Shankar Raja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 139,
+    title: "Sollividu Velli Nilavae",
+    artists: "Mano, Swarnalatha",
+    src: "Sollividu Velli Nilavae (From Amaidhi Padai ) - Mano, Swarnalatha.mp3",
+    musicDirector: "Deva",
+    movie: "Amaidhi Padai",
+    year: "1994"
+  },
+  {
+    id: 140,
+    title: "Sonapareeya",
+    artists: "A.R. Rahman, Javed Ali, Haricharan, Nakash Aziz",
+    src: "Sonapareeya - A.R. Rahman, Javed Ali, Haricharan, Nakash Aziz.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 141,
+    title: "Sonnalthaan Kathala",
+    artists: "Hariharan, K. S. Chithra",
+    src: "Sonnalthaan Kathala - Hariharan, K. S. Chithra.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 142,
+    title: "Soodaana",
+    artists: "Shreya Ghoshal, Devi Sri Prasad, Viveka",
+    src: "Soodaana (From Pushpa 2 The Rule ) [TAMIL] - Shreya Ghoshal, Devi Sri Prasad, Viveka.mp3",
+    musicDirector: "Devi Sri Prasad",
+    movie: "Pushpa 2 The Rule",
+    year: "2024"
+  },
+  {
+    id: 143,
+    title: "Sotta Sotta",
+    artists: "Srinivas, Vairamuthu",
+    src: "Sotta Sotta - Srinivas, Vairamuthu.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 144,
+    title: "Sotta Sotta",
+    artists: "Sujatha, Vairamuthu",
+    src: "Sotta Sotta - Sujatha, Vairamuthu.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 145,
+    title: "Spark",
+    artists: "Yuvan Shankar Raja, Vrusha Balu",
+    src: "Spark (From The Greatest Of All Time ) - Yuvan Shankar Raja, Vrusha Balu.mp3",
+    musicDirector: "Yuvan Shankar Raja",
+    movie: "The Greatest Of All Time",
+    year: "2024"
+  },
+  {
+    id: 146,
+    title: "Srivalli",
+    artists: "Devi Sri Prasad, Sid Sriram, Viveka",
+    src: "Srivalli (From Pushpa - The Rise )(Tamil) - Devi Sri Prasad, Sid Sriram, Viveka.mp3",
+    musicDirector: "Devi Sri Prasad",
+    movie: "Pushpa - The Rise",
+    year: "2021"
+  },
+  {
+    id: 147,
+    title: "Stihagathi PooKKale",
+    artists: "S. P. Balasubrahmanyam, K. S. Chithra",
+    src: "Stihagathi PooKKale - S. P. Balasubrahmanyam, K. S. Chithra.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 148,
+    title: "Suna Pana",
+    artists: "Manikandan, Jeruson",
+    src: "Suna Pana (feat. Jeruson) - Manikandan, Jeruson.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 149,
+    title: "Sundari",
+    artists: "S. P. Balasubrahmanyam, S. Janaki",
+    src: "Sundari - S. P. Balasubrahmanyam, S. Janaki.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 150,
+    title: "Suppose",
+    artists: "Vinaya, Ranjith Govind",
+    src: "Suppose - Vinaya, Ranjith Govind.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 151,
+    title: "Surangani",
+    artists: "Vijay Antony, M.K. Balaji, Megha, Maya lyer",
+    src: "Surangani - Vijay Antony, M.K. Balaji, Megha, Maya lyer.mp3",
+    musicDirector: "Vijay Antony",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 152,
+    title: "Surviva",
+    artists: "Anirudh Ravichander, Yogi B, MALIII",
+    src: "Surviva (feat. Yogi B & Mali) - Anirudh Ravichander, Yogi B, MALIII.mp3",
+    musicDirector: "Anirudh Ravichander",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 153,
+    title: "SUTHI SUTHI VANDHIGA",
+    artists: "S. P. Balasubrahmanyam, Harini",
+    src: "SUTHI SUTHI VANDHIGA - S. P. Balasubrahmanyam, Harini.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 154,
+    title: "Suttum Vizhi",
+    artists: "Sriram Parthasarathy, Bombay Jayashri",
+    src: "Suttum Vizhi - Sriram Parthasarathy, Bombay Jayashri.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Ghajini",
+    year: "2005"
+  },
+  {
+    id: 155,
+    title: "Takkaru Takkaru",
+    artists: "Hiphop Tamizha",
+    src: "Takkaru Takkaru - Hiphop Tamizha.mp3",
+    musicDirector: "Hiphop Tamizha",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 156,
+    title: "Takkunu Takkunu",
+    artists: "Hiphop Tamizha, Anirudh Ravichander",
+    src: "Takkunu Takkunu - From Mr. Local - Hiphop Tamizha, Anirudh Ravichander.mp3",
+    musicDirector: "Hiphop Tamizha, Anirudh Ravichander",
+    movie: "Mr. Local",
+    year: "2019"
+  },
+  {
+    id: 157,
+    title: "Taxi Taxi",
+    artists: "A.R. Rahman, Benny Dayal, Blaaze, Viviane Chaix, Javed Ali",
+    src: "Taxi Taxi - A.R. Rahman, Benny Dayal, Blaaze, Viviane Chaix, Javed Ali.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 158,
+    title: "Telephone Mani Pol",
+    artists: "Harini, Hariharan",
+    src: "Telephone Mani Pol - Harini, Hariharan.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 159,
+    title: "Thaai Kelavi",
+    artists: "Dhanush, Anirudh Ravichander",
+    src: "Thaai Kelavi (From Thiruchitrambalam ) - Dhanush, Anirudh Ravichander.mp3",
+    musicDirector: "Anirudh Ravichander",
+    movie: "Thiruchitrambalam",
+    year: "2022"
+  },
+  {
+    id: 160,
+    title: "Thadakku",
+    artists: "Hariharan, Sujatha, Vidyasagar, Yugabharathi",
+    src: "Thadakku - Hariharan, Sujatha, Vidyasagar, Yugabharathi.mp3",
+    musicDirector: "Vidyasagar",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 161,
+    title: "Thamarai Poovukum",
+    artists: "Vidyasagar, Krishnachandar, Sujatha",
+    src: "Thamarai Poovukum - Vidyasagar, Krishnachandar, Sujatha.mp3",
+    musicDirector: "Vidyasagar",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 162,
+    title: "Than Thaketa Theemi",
+    artists: "Unnikrishnan, Mano",
+    src: "Than Thaketa Theemi (From Rettai Jadai Vayasu) - Unnikrishnan, Mano.mp3",
+    musicDirector: "Unknown",
+    movie: "Rettai Jadai Vayasu",
+    year: "Unknown"
+  },
+  {
+    id: 163,
+    title: "Thanga Nilave",
+    artists: "S. P. Balasubrahmanyam",
+    src: "Thanga Nilave - S. P. Balasubrahmanyam.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 164,
+    title: "Thanga Thamarai Magalae",
+    artists: "S. P. Balasubrahmanyam, Malgudi Subha, A.R. Rahman",
+    src: "Thanga Thamarai Magalae - S. P. Balasubrahmanyam, Malgudi Subha, A.R. Rahman.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 165,
+    title: "Thannandhani Kattukkulle",
+    artists: "S. P. Balasubrahmanyam, K. S. Chithra",
+    src: "Thannandhani Kattukkulle - S. P. Balasubrahmanyam, K. S. Chithra.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 166,
+    title: "Thanneerilae Mugam",
+    artists: "Mano, Uma Ramanan",
+    src: "Thanneerilae Mugam (From Manikuyil ) - Mano, Uma Ramanan.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Manikuyil",
+    year: "Unknown"
+  },
+  {
+    id: 167,
+    title: "Thanni Karuthirichi",
+    artists: "Achu, Silambarasan TR, Vineetha Ajith",
+    src: "Thanni Karuthirichi - Achu, Silambarasan TR, Vineetha Ajith.mp3",
+    musicDirector: "Achu",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 168,
+    title: "Thattippaarthen",
+    artists: "T. Rajendar",
+    src: "Thattippaarthen - T. Rajendar.mp3",
+    musicDirector: "T. Rajendar",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 169,
+    title: "Thavani Pootta",
+    artists: "Vijay Yesudas, Srerayakoshi, Yugabharathi, Yuvan Shankar Raja",
+    src: "Thavani Pootta - Vijay Yesudas, Srerayakoshi, Yugabharathi, Yuvan Shankar Raja.mp3",
+    musicDirector: "Yuvan Shankar Raja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 170,
+    title: "The Youth Of Power Paandi",
+    artists: "Sean Roldan, Shweta Mohan, Andal",
+    src: "The Youth Of Power Paandi - Paarthen - Sean Roldan, Shweta Mohan, Andal.mp3",
+    musicDirector: "Sean Roldan",
+    movie: "Power Paandi",
+    year: "2017"
+  },
+  {
+    id: 171,
+    title: "Theakku Maramaattam",
+    artists: "Manikka Vinayagam, Velmurugan, Karisal Kar",
+    src: "Theakku Maramaattam - Manikka Vinayagam, Velmurugan, Karisal Kar.mp3",
+    musicDirector: "Unknown",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 172,
+    title: "Thedi Thedi",
+    artists: "Ranjith Govind, Vikraanth, Jakes Bejoy, S. Sanjeev Kumar",
+    src: "Thedi Thedi - Ranjith Govind, Vikraanth, Jakes Bejoy, S. Sanjeev Kumar.mp3",
+    musicDirector: "Jakes Bejoy",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 173,
+    title: "Thedum Kann Paarvai",
+    artists: "S. P. Balasubrahmanyam, S. Janaki",
+    src: "Thedum Kann Paarvai (From Mella Thirandhadhu Kadhavu ) - S. P. Balasubrahmanyam, S. Janaki.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Mella Thirandhadhu Kadhavu",
+    year: "1986"
+  },
+  {
+    id: 174,
+    title: "Thee Illai",
+    artists: "Harris Jayaraj, Naresh lyer, Mukesh, Gopal Rao, Mahathi, Ranina Reddy",
+    src: "Thee Illai - Harris Jayaraj, Naresh lyer, Mukesh, Gopal Rao, Mahathi, Ranina Reddy.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 175,
+    title: "Theeyae Theeyae",
+    artists: "Harris Jayaraj, Franko, Aalaap Raju, Sathyan, Charulatha Mani, Suchitra",
+    src: "Theeyae Theeyae - Harris Jayaraj, Franko, Aalaap Raju, Sathyan, Charulatha Mani, Suchitra.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 176,
+    title: "Then Then Then",
+    artists: "Udit Narayan, Shreya Ghoshal",
+    src: "Then Then Then - Udit Narayan, Shreya Ghoshal.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 177,
+    title: "Thendral Vanthu",
+    artists: "Ilaiyaraaja, S. Janaki",
+    src: "Thendral Vanthu - Ilaiyaraaja, S. Janaki.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 178,
+    title: "Thenkizhakku",
+    artists: "Santhosh Narayanan, Dhee, Yugabharathi",
+    src: "Thenkizhakku - From Vaazhai - Santhosh Narayanan, Dhee, Yugabharathi.mp3",
+    musicDirector: "Santhosh Narayanan",
+    movie: "Vaazhai",
+    year: "Unknown"
+  },
+  {
+    id: 179,
+    title: "Thenmadurai Vaigai Nadhi",
+    artists: "S. P. Balasubrahmanyam, P. Susheela, Malaysia Vasudevan",
+    src: "Thenmadurai Vaigai Nadhi - S. P. Balasubrahmanyam, P. Susheela, Malaysia Vasudevan.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 180,
+    title: "Theradi Veeethiyil Devathai",
+    artists: "Manikka Vinayagam, Karthik",
+    src: "Theradi Veeethiyil Devathai (From Run ) - Manikka Vinayagam, Karthik.mp3",
+    musicDirector: "Unknown",
+    movie: "Run",
+    year: "2002"
+  },
+  {
+    id: 181,
+    title: "Thihumananthan",
+    artists: "S. P. Balasubrahmanyam",
+    src: "Thihumananthan - S. P. Balasubrahmanyam.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 182,
+    title: "Thilaana Thilaana",
+    artists: "A.R. Rahman, Mano, Sujatha, Bhuvanchandra",
+    src: "Thilaana Thilaana - A.R. Rahman, Mano, Sujatha, Bhuvanchandra.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 183,
+    title: "Thilana",
+    artists: "Mano, Sujatha",
+    src: "Thilana - Mano, Sujatha.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 184,
+    title: "Thimsukatta",
+    artists: "Tippu, Srilekha Parthasarathy, Pa. Vijay",
+    src: "Thimsukatta - Tippu, Srilekha Parthasarathy, Pa. Vijay.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 185,
+    title: "Thirunelveli Halwada",
+    artists: "Harris Jayaraj, Palakkad Sriram, Na.Muthukumar",
+    src: "Thirunelveli Halwada - Harris Jayaraj, Palakkad Sriram, Na.Muthukumar.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 186,
+    title: "o Pathinettu Vayathu",
+    artists: "S. P. Balasubrahmanyam, S. Janaki",
+    src: "o Pathinettu Vayathu - S. P. Balasubrahmanyam, S. Janaki.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 187,
+    title: "Paththavaikkum",
+    artists: "Deepthi Suresh, Anirudh Ravichander, Vignesh Shivan",
+    src: "Paththavaikkum (From Devara Part 1 ) - Deepthi Suresh, Anirudh Ravichander, Vignesh Shivan.mp3",
+    musicDirector: "Anirudh Ravichander",
+    movie: "Devara Part 1",
+    year: "2024"
+  },
+  {
+    id: 188,
+    title: "Pattukotta Ammalu",
+    artists: "Malaysia Vasudevan",
+    src: "Pattukotta Ammalu - Malaysia Vasudevan.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 189,
+    title: "Pazhagikalam",
+    artists: "Hiphop Tamizha",
+    src: "Pazhagikalam - Hiphop Tamizha.mp3",
+    musicDirector: "Hiphop Tamizha",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 190,
+    title: "Pazhamuthir Cholai",
+    artists: "K. J. Yesudas",
+    src: "Pazhamuthir Cholai - K. J. Yesudas.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 191,
+    title: "Penn Oruthi",
+    artists: "S. P. Balasubrahmanyam",
+    src: "Penn Oruthi - S. P. Balasubrahmanyam.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 192,
+    title: "o Perunthil Nee Enakku",
+    artists: "Madhu Balakrishnan, Madhushree, Dhina",
+    src: "o Perunthil Nee Enakku - Madhu Balakrishnan, Madhushree, Dhina.mp3",
+    musicDirector: "Dhina",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 193,
+    title: "Pesavey Pesatha",
+    artists: "M.M. Keeravani, Manikka Vinayagam, R. Jayadev, Janaki Iyer",
+    src: "Pesavey Pesatha - M.M. Keeravani, Manikka Vinayagam, R. Jayadev, Janaki Iyer.mp3",
+    musicDirector: "M.M. Keeravani",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 194,
+    title: "Pia .. Pia ..",
+    artists: "Vijay Antony",
+    src: "Pia .. Pia .. - Vijay Antony.m4a",
+    musicDirector: "Vijay Antony",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 195,
+    title: "Pogattum Pogattum Po",
+    artists: "Hiphop Tamizha",
+    src: "Pogattum Pogattum Po - Hiphop Tamizha.mp3",
+    musicDirector: "Hiphop Tamizha",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 196,
+    title: "Ponni Nadhi",
+    artists: "A.R. Rahman, A. R. Reihana, Bamba Bakya",
+    src: "Ponni Nadhi (From Ponniyin Selvan Part -1 ) - Tamil - A.R. Rahman, A. R. Reihana, Bamba Bakya.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Ponniyin Selvan Part 1",
+    year: "2022"
+  },
+  {
+    id: 197,
+    title: "Poo Ondru Valarthen",
+    artists: "S. P. Balasubrahmanyam",
+    src: "Poo Ondru Valarthen - S. P. Balasubrahmanyam.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 198,
+    title: "Poo Onnu Vaduthama",
+    artists: "Malaysia Vasudevan",
+    src: "Poo Onnu Vaduthama - Malaysia Vasudevan.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 199,
+    title: "Poo Poottha Chediya",
+    artists: "P. Jayachandran",
+    src: "Poo Poottha Chediya - P. Jayachandran.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 200,
+    title: "Poo Vaangi Vanda Neram",
+    artists: "S. P. Balasubrahmanyam",
+    src: "Poo Vaangi Vanda Neram - S. P. Balasubrahmanyam.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 201,
+    title: "Pookara Pookara",
+    artists: "Shankar Mahadevan, Vasundhara Das, Vairamuthu",
+    src: "Pookara Pookara - Shankar Mahadevan, Vasundhara Das, Vairamuthu.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Kandukondain Kandukondain",
+    year: "2000"
+  },
+  {
+    id: 202,
+    title: "Pookkal Pookkum",
+    artists: "G. V. Prakash, Roop Kumar Rathod, Harini, Andrea Jeremiah",
+    src: "Pookkal Pookkum - G. V. Prakash, Roop Kumar Rathod, Harini, Andrea Jeremiah.mp3",
+    musicDirector: "G. V. Prakash",
+    movie: "Aadukalam",
+    year: "2011"
+  },
+  {
+    id: 203,
+    title: "Poovasam",
+    artists: "Vijay Prakash, Sadhana Sargam",
+    src: "Poovasam - Vijay Prakash, Sadhana Sargam.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 204,
+    title: "Poove Sem Poove",
+    artists: "K. J. Yesudas",
+    src: "Poove Sem Poove - Male - K. J. Yesudas.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 205,
+    title: "Poovoma Oorgolam",
+    artists: "Swarnalatha, S. P. Balasubrahmanyam",
+    src: "Poovoma Oorgolam - Swarnalatha, S. P. Balasubrahmanyam.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 206,
+    title: "Poovukkul",
+    artists: "Unnikrishnan, Sujatha, Vairamuthu",
+    src: "Poovukkul - Unnikrishnan, Sujatha, Vairamuthu.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 207,
+    title: "Poraada Poraada",
+    artists: "Hiphop Tamizha, Anthony Daasan",
+    src: "Poraada Poraada - Hiphop Tamizha, Anthony Daasan.mp3",
+    musicDirector: "Hiphop Tamizha",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 208,
+    title: "Porkanda Singam",
+    artists: "Anirudh Ravichander",
+    src: "Porkanda Singam (EDM Version) [From Vikram ] - Anirudh Ravichander.mp3",
+    musicDirector: "Anirudh Ravichander",
+    movie: "Vikram",
+    year: "2022"
+  },
+  {
+    id: 209,
+    title: "Pottane Moonu Muducchithan",
+    artists: "S. P. Balasubrahmanyam, Sasirekha",
+    src: "Pottane Moonu Muducchithan - S. P. Balasubrahmanyam, Sasirekha.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 210,
+    title: "Pottu Thakku",
+    artists: "Srikanth Deva, Silambarasan TR, Roshini",
+    src: "Pottu Thakku - Srikanth Deva, Silambarasan TR, Roshini.mp3",
+    musicDirector: "Srikanth Deva",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 211,
+    title: "Pottu Vaitha Oru Vatta Nila",
+    artists: "K. J. Yesudas",
+    src: "Pottu Vaitha Oru Vatta Nila (From Idhayam ) - K. J. Yesudas.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Idhayam",
+    year: "1991"
+  },
+  {
+    id: 212,
+    title: "Private Party",
+    artists: "Anirudh Ravichander, Jonita Gandhi",
+    src: "Private Party (From Don ) - Anirudh Ravichander, Jonita Gandhi.mp3",
+    musicDirector: "Anirudh Ravichander",
+    movie: "Don",
+    year: "2022"
+  },
+  {
+    id: 213,
+    title: "Pudhu Vellai Mazhai",
+    artists: "Unni Menon, Sujatha",
+    src: "Pudhu Vellai Mazhai - Unni Menon, Sujatha.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Roja",
+    year: "1992"
+  },
+  {
+    id: 214,
+    title: "Pudichirukku",
+    artists: "Harris Jayaraj, Hariharan, Komal Ramesh, Mahathi",
+    src: "Pudichirukku (From Saamy ) - Harris Jayaraj, Hariharan, Komal Ramesh, Mahathi.mp3",
+    musicDirector: "Harris Jayaraj",
+    movie: "Saamy",
+    year: "2003"
+  },
+  {
+    id: 215,
+    title: "Putham Puthu Bhoomi",
+    artists: "A.R. Rahman, Mano, K. S. Chithra",
+    src: "Putham Puthu Bhoomi - A.R. Rahman, Mano, K. S. Chithra.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 216,
+    title: "Puttham Puthu",
+    artists: "S. P. Balasubrahmanyam",
+    src: "Puttham Puthu - S. P. Balasubrahmanyam.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 217,
+    title: "Ra Ra Raara Ramayya",
+    artists: "S. P. Balasubrahmanyam, Swarnalatha, Rajagopal",
+    src: "Ra Ra Raara Ramayya - S. P. Balasubrahmanyam, Swarnalatha, Rajagopal.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 218,
+    title: "Raangi Rangamma",
+    artists: "Mani Sharma, Udit Narayan, Malathi",
+    src: "Raangi Rangamma - Mani Sharma, Udit Narayan, Malathi.mp3",
+    musicDirector: "Mani Sharma",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 219,
+    title: "Ragangal Padhnaaru",
+    artists: "S. P. Balasubrahmanyam",
+    src: "Ragangal Padhnaaru - S. P. Balasubrahmanyam.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 220,
+    title: "Ragasiya Kanavugal",
+    artists: "Hariharan, Madhushree",
+    src: "Ragasiya Kanavugal - Hariharan, Madhushree.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 221,
+    title: "Ragasiyamaai",
+    artists: "Hariharan, Ramanathan, Sadhana Sargam",
+    src: "Ragasiyamaai - Hariharan, Ramanathan, Sadhana Sargam.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 222,
+    title: "Railin Oligal",
+    artists: "Govind Vasantha, Pradeep Kumar, Shakthisree Gopalan",
+    src: "Railin Oligal - From Blue Star - Govind Vasantha, Pradeep Kumar, Shakthisree Gopalan.mp3",
+    musicDirector: "Govind Vasantha",
+    movie: "Blue Star",
+    year: "Unknown"
+  },
+  {
+    id: 223,
+    title: "Rajadhi Rajan",
+    artists: "S. P. Balasubrahmanyam, Swarnalatha",
+    src: "Rajadhi Rajan - S. P. Balasubrahmanyam, Swarnalatha.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 224,
+    title: "Rakkamma",
+    artists: "S. P. Balasubrahmanyam, Swarnalatha",
+    src: "Rakkamma - S. P. Balasubrahmanyam, Swarnalatha.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 225,
+    title: "Rangola",
+    artists: "Shankar Mahadevan, Sujatha",
+    src: "Rangola - Shankar Mahadevan, Sujatha.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 226,
+    title: "Rangu Rangamma",
+    artists: "Vijay Yesudas, Kailash Kher, Swarnalatha",
+    src: "Rangu Rangamma - Vijay Yesudas, Kailash Kher, Swarnalatha.mp3",
+    musicDirector: "Devi Sri Prasad",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 227,
+    title: "Raththiri Neraththu",
+    artists: "B.S. Sasirekha",
+    src: "Raththiri Neraththu - B.S. Sasirekha.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 228,
+    title: "Roja Poonthottam",
+    artists: "Unnikrishnan, Anuradha Sriram",
+    src: "Roja Poonthottam (From Kannukul Nilavu ) - Unnikrishnan, Anuradha Sriram.mp3",
+    musicDirector: "Deva",
+    movie: "Kannukul Nilavu",
+    year: "1999"
+  },
+  {
+    id: 229,
+    title: "Saami Kitta Solli",
+    artists: "S. P. Balasubrahmanyam, S. Janaki",
+    src: "Saami Kitta Solli (From Aavaram Poo ) - S. P. Balasubrahmanyam, S. Janaki.mp3",
+    musicDirector: "Deva",
+    movie: "Aavaram Poo",
+    year: "Unknown"
+  },
+  {
+    id: 230,
+    title: "Saami Saami",
+    artists: "Devi Sri Prasad, Rajalakshmi Senthiganesh, Viveka",
+    src: "Saami Saami (From Pushpa - The Rise )(Tamil) - Devi Sri Prasad, Rajalakshmi Senthiganesh, Viveka.mp3",
+    musicDirector: "Devi Sri Prasad",
+    movie: "Pushpa - The Rise",
+    year: "2021"
+  },
+  {
+    id: 231,
+    title: "Saarattu Vandiyila",
+    artists: "A.R. Rahman, A. R. Reihana, Tippu, Nikhita Gandhi",
+    src: "Saarattu Vandiyila - A.R. Rahman, A. R. Reihana, Tippu, Nikhita Gandhi.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 232,
+    title: "Sahana Saral Thoo",
+    artists: "Udit Narayan, Chinmayi, A.R. Rahman, Vijay Yesudas",
+    src: "Sahana Saral Thoo - Udit Narayan, Chinmayi, A.R. Rahman, Vijay Yesudas.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 233,
+    title: "Sai Pallavi's Intro",
+    artists: "G. V. Prakash",
+    src: "Sai Pallavi's Intro - G. V. Prakash.mp3",
+    musicDirector: "G. V. Prakash",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 234,
+    title: "Salma",
+    artists: "Mohana Bhogaraju, Arko, K.N. VIJAYA KUMAR",
+    src: "Salma (From Aho Vikramaarka )(Tamil) - Mohana Bhogaraju, Arko, K.N. VIJAYA KUMAR.mp3",
+    musicDirector: "Arko",
+    movie: "Aho Vikramaarka",
+    year: "Unknown"
+  },
+  {
+    id: 235,
+    title: "Sandai Kozhi",
+    artists: "A.R. Rahman, Madhushree",
+    src: "Sandai Kozhi - A.R. Rahman, Madhushree.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Aaytha Ezhuthu",
+    year: "2004"
+  },
+  {
+    id: 236,
+    title: "Sandakari Neethan",
+    artists: "Mervin, Anirudh Ravichander, Jonita Gandhi, Mervin Solomon",
+    src: "Sandakari Neethan (From Sangathamizhan ) - Vivek - Mervin, Anirudh Ravichander, Jonita Gandhi, Mervin Solomon.mp3",
+    musicDirector: "Anirudh Ravichander",
+    movie: "Sangathamizhan",
+    year: "Unknown"
+  },
+  {
+    id: 237,
+    title: "Sangeetha Megam",
+    artists: "S. P. Balasubrahmanyam",
+    src: "Sangeetha Megam - S. P. Balasubrahmanyam.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 238,
+    title: "Santhaikku Vantha Kili",
+    artists: "S. P. Balasubrahmanyam, S. Janaki",
+    src: "Santhaikku Vantha Kili - S. P. Balasubrahmanyam, S. Janaki.mp3",
+    musicDirector: "Ilaiyaraaja",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 239,
+    title: "Santhipoma",
+    artists: "Unni Menon Chinmayi Anupama",
+    src: "Santhipoma - Unni Menon Chinmayi Anupama.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 240,
+    title: "Santhosha kanneere",
+    artists: "Ta'mil, Febi",
+    src: "Santhosha kanneere (From Uyire ) - Ta'mil, Febi.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Uyire",
+    year: "1998"
+  },
+  {
+    id: 241,
+    title: "Sarakku Vechirukken",
+    artists: "Shankar Mahadevan, Radhika",
+    src: "Sarakku Vechirukken (From Shajahaan ) - Shankar Mahadevan, Radhika.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Shajahaan",
+    year: "2001"
+  },
+  {
+    id: 242,
+    title: "Saroja Saman Nikolo",
+    artists: "Shankar Mahadevan, Premgi Amaren",
+    src: "Saroja Saman Nikolo - Shankar Mahadevan, Premgi Amaren.mp3",
+    musicDirector: "Yuvan Shankar Raja",
+    movie: "Chennai 600028",
+    year: "2007"
+  },
+  {
+    id: 243,
+    title: "Satham Illatha",
+    artists: "Bharadwaj, S. P. Balasubrahmanyam, Sujatha",
+    src: "Satham Illatha - Bharadwaj, S. P. Balasubrahmanyam, Sujatha.mp3",
+    musicDirector: "Bharadwaj",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 244,
+    title: "Sathikadi",
+    artists: "Sangeetha Mahadevan, Vijay Antony",
+    src: "Sathikadi - Sangeetha Mahadevan, Vijay Antony.mp3",
+    musicDirector: "Vijay Antony",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 245,
+    title: "Secret Of Success",
+    artists: "Lucky Ali, Clinton, Vasundhara Das, Blaaze, Kabilan",
+    src: "Secret Of Success - Lucky Ali, Clinton, Vasundhara Das, Blaaze, Kabilan.mp3",
+    musicDirector: "A.R. Rahman",
+    movie: "Unknown",
+    year: "Unknown"
+  },
+  {
+    id: 246,
+    title: "Seena Thana",
+    artists: "Grace, Bharadwaj, Vairamuthu",
+    src: "Seena Thana - Grace, Bharadwaj, Vairamuthu.mp3",
+    musicDirector: "Bharadwaj",
+    movie: "Unknown",
+    year: "Unknown"
+  }
 ];
 
+// Sort the playlist alphabetically by song title
+playlist.sort((a, b) => a.title.localeCompare(b.title));
+
+// Spotify Configuration
 const SPOTIFY_CONFIG = {
-    clientId: 'YOUR_SPOTIFY_CLIENT_ID_HERE',
-    redirectUri: window.location.origin + '/callback',
+    clientId: '5c7b4b3c2e1a4c9e8b6a7c8d9e0f1a2b',
+    redirectUri: window.location.origin,
     scopes: [
         'user-read-private',
         'user-read-email',
@@ -1474,6 +3178,7 @@ const SPOTIFY_CONFIG = {
     ].join(' ')
 };
 
+// Player State
 let audio = new Audio();
 let currentIndex = 0;
 let filteredSongs = [...playlist];
@@ -1482,10 +3187,8 @@ let spotifyToken = null;
 let spotifyPlayer = null;
 let isSpotifyConnected = false;
 let spotifyDeviceId = null;
-let volume = 0.7;
-let queue = [];
-let favorites = new Set();
 
+// DOM Elements
 const elements = {
     songImg: document.getElementById('songImg'),
     songName: document.getElementById('songName'),
@@ -1504,126 +3207,119 @@ const elements = {
     userAvatar: document.getElementById('userAvatar'),
     username: document.getElementById('username'),
     spotifyConnectBtn: document.getElementById('spotifyConnectBtn'),
-    volumeSlider: document.getElementById('volumeSlider'),
-    volumeLevel: document.getElementById('volumeLevel'),
-    loadingOverlay: document.getElementById('loadingOverlay'),
-    contextMenu: document.getElementById('contextMenu'),
-    particlesContainer: document.getElementById('particlesContainer'),
-    floatingActionBtn: document.getElementById('floatingActionBtn')
+    sidebar: document.getElementById('sidebar'),
+    sidebarToggle: document.getElementById('sidebarToggle'),
+    mobileOverlay: document.getElementById('mobileOverlay')
 };
 
-function createParticles() {
-    for (let i = 0; i < 30; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.width = Math.random() * 100 + 50 + 'px';
-        particle.style.height = particle.style.width;
-        particle.style.left = Math.random() * 100 + 'vw';
-        particle.style.top = Math.random() * 100 + 'vh';
-        particle.style.animationDelay = Math.random() * 15 + 's';
-        particle.style.animationDuration = Math.random() * 10 + 10 + 's';
-        elements.particlesContainer.appendChild(particle);
+// ======================
+// SIDEBAR TOGGLE FUNCTIONS
+// ======================
+
+function setupSidebarToggle() {
+    const savedState = localStorage.getItem('sidebarCollapsed');
+    if (savedState === 'true') {
+        elements.sidebar.classList.add('collapsed');
+        updateToggleButton();
     }
-}
-
-function hideLoading() {
-    setTimeout(() => {
-        elements.loadingOverlay.style.opacity = '0';
-        setTimeout(() => {
-            elements.loadingOverlay.style.display = 'none';
-        }, 500);
-    }, 1000);
-}
-function showContextMenu(x, y, songIndex) {
-    elements.contextMenu.style.left = x + 'px';
-    elements.contextMenu.style.top = y + 'px';
-    elements.contextMenu.classList.add('show');
-    elements.contextMenu.dataset.songIndex = songIndex;
-}
-
-function hideContextMenu() {
-    elements.contextMenu.classList.remove('show');
-}
-
-function addToQueue() {
-    const index = elements.contextMenu.dataset.songIndex;
-    const song = filteredSongs[index];
-    queue.push(song);
-    showToast(`"${song.name}" added to queue`, 'success');
-}
-
-function addToPlaylist() {
-    const index = elements.contextMenu.dataset.songIndex;
-    const song = filteredSongs[index];
-    showToast(`"${song.name}" added to playlist`, 'success');
-}
-
-function shareSong() {
-    const index = elements.contextMenu.dataset.songIndex;
-    const song = filteredSongs[index];
-    if (navigator.share) {
-        navigator.share({
-            title: song.name,
-            text: `Listen to ${song.name} by ${song.artist} on Galex Premium`,
-            url: window.location.href
-        });
-    } else {
-        navigator.clipboard.writeText(`${song.name} by ${song.artist}`);
-        showToast('Link copied to clipboard!', 'success');
-    }
-}
-
-function showQuickActions() {
-    const actions = [
-        { icon: 'fas fa-plus', label: 'Add Song', action: () => console.log('Add song') },
-        { icon: 'fas fa-folder-plus', label: 'New Playlist', action: () => console.log('New playlist') },
-        { icon: 'fas fa-download', label: 'Download', action: () => console.log('Download') },
-        { icon: 'fas fa-share', label: 'Share', action: () => console.log('Share') }
-    ];
     
-    const menu = document.createElement('div');
-    menu.className = 'context-menu';
-    menu.style.bottom = '100px';
-    menu.style.right = '30px';
-    menu.style.left = 'auto';
-    
-    actions.forEach(action => {
-        const item = document.createElement('div');
-        item.className = 'context-item';
-        item.innerHTML = `<i class="${action.icon}"></i><span>${action.label}</span>`;
-        item.onclick = action.action;
-        menu.appendChild(item);
+    elements.sidebarToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleSidebar();
     });
     
-    document.body.appendChild(menu);
-    menu.classList.add('show');
-    
-    setTimeout(() => {
-        document.addEventListener('click', function hideMenu(e) {
-            if (!menu.contains(e.target) && e.target !== elements.floatingActionBtn) {
-                menu.classList.remove('show');
-                setTimeout(() => menu.remove(), 200);
-                document.removeEventListener('click', hideMenu);
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        item.addEventListener('mouseenter', () => {
+            if (elements.sidebar.classList.contains('collapsed')) {
+                const label = item.querySelector('.toggle-label');
+                if (label) {
+                    label.style.opacity = '1';
+                }
             }
         });
-    }, 100);
-}
-
-function setupVolumeControl() {
-    elements.volumeSlider.addEventListener('click', (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const percent = (e.clientX - rect.left) / rect.width;
-        volume = Math.max(0, Math.min(1, percent));
-        audio.volume = volume;
-        elements.volumeLevel.style.width = `${volume * 100}%`;
-        showToast(`Volume: ${Math.round(volume * 100)}%`);
+        
+        item.addEventListener('mouseleave', () => {
+            if (elements.sidebar.classList.contains('collapsed')) {
+                const label = item.querySelector('.toggle-label');
+                if (label) {
+                    label.style.opacity = '0';
+                }
+            }
+        });
     });
     
-    audio.volume = volume;
-    elements.volumeLevel.style.width = `${volume * 100}%`;
+    elements.mobileOverlay.addEventListener('click', () => {
+        if (window.innerWidth <= 768 && !elements.sidebar.classList.contains('collapsed')) {
+            elements.sidebar.classList.add('collapsed');
+            elements.mobileOverlay.classList.remove('active');
+            localStorage.setItem('sidebarCollapsed', 'true');
+            updateToggleButton();
+        }
+    });
+    
+    if (window.innerWidth <= 768) {
+        document.addEventListener('click', (e) => {
+            if (!elements.sidebar.contains(e.target) && 
+                !elements.sidebar.classList.contains('collapsed') &&
+                e.target !== elements.sidebarToggle) {
+                elements.sidebar.classList.add('collapsed');
+                elements.mobileOverlay.classList.remove('active');
+                localStorage.setItem('sidebarCollapsed', 'true');
+                updateToggleButton();
+            }
+        });
+    }
 }
 
+function toggleSidebar() {
+    const isMobile = window.innerWidth <= 768;
+    const wasCollapsed = elements.sidebar.classList.contains('collapsed');
+    
+    elements.sidebar.classList.toggle('collapsed');
+    const isCollapsed = elements.sidebar.classList.contains('collapsed');
+    
+    localStorage.setItem('sidebarCollapsed', isCollapsed);
+    
+    updateToggleButton();
+    
+    if (isMobile) {
+        if (isCollapsed) {
+            elements.mobileOverlay.classList.remove('active');
+        } else {
+            elements.mobileOverlay.classList.add('active');
+        }
+    }
+    
+    showToast(isCollapsed ? 'Sidebar collapsed' : 'Sidebar expanded', 'info');
+}
+
+function updateToggleButton() {
+    const isCollapsed = elements.sidebar.classList.contains('collapsed');
+    elements.sidebarToggle.title = isCollapsed ? 'Expand sidebar' : 'Collapse sidebar';
+    elements.sidebarToggle.style.transform = isCollapsed ? 'rotate(180deg)' : 'rotate(0deg)';
+}
+
+function handleResize() {
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isMobile && !elements.sidebar.classList.contains('collapsed')) {
+        elements.mobileOverlay.classList.add('active');
+    } else {
+        elements.mobileOverlay.classList.remove('active');
+    }
+}
+
+// ======================
+// SPOTIFY FUNCTIONS
+// ======================
+
 function initSpotify() {
+    if (window.Spotify) {
+        console.log('Spotify SDK already loaded');
+        return;
+    }
+    
     const script = document.createElement('script');
     script.src = 'https://sdk.scdn.co/spotify-player.js';
     script.async = true;
@@ -1643,205 +3339,114 @@ function initSpotify() {
 }
 
 function connectSpotify() {
-    const authUrl = `https://accounts.spotify.com/authorize?response_type=token&client_id=${SPOTIFY_CONFIG.clientId}&scope=${encodeURIComponent(SPOTIFY_CONFIG.scopes)}&redirect_uri=${encodeURIComponent(SPOTIFY_CONFIG.redirectUri)}&show_dialog=true`;
-    window.open(authUrl, 'Spotify Auth', 'width=600,height=700');
-}
-
-function handleSpotifyCallback() {
-    const hash = window.location.hash.substring(1);
-    const params = new URLSearchParams(hash);
+    if (isSpotifyConnected) {
+        if (confirm('Disconnect from Spotify?')) {
+            disconnectSpotify();
+        }
+        return;
+    }
     
-    const token = params.get('access_token');
-    if (token) {
-        spotifyToken = token;
+    const simulateSpotify = confirm("For demo purposes, we'll simulate Spotify connection. In production, this would redirect to Spotify OAuth.\n\nClick OK to simulate successful connection.");
+    
+    if (simulateSpotify) {
         isSpotifyConnected = true;
-        localStorage.setItem('spotify_token', token);
-        setupSpotifyPlayer(token);
-        showToast('Successfully connected to Spotify!', 'success');
         updateConnectionStatus();
         
-        window.history.replaceState({}, document.title, window.location.pathname);
+        const demoSpotifyTracks = [
+            {
+                id: 1001,
+                title: "Around the World",
+                artists: "Daft Punk",
+                src: "spotify:track:4iV5W9uYEdYUVa79Axb7Rh",
+                musicDirector: "Daft Punk",
+                movie: "Homework",
+                year: 1997,
+                img: "https://i.scdn.co/image/ab67616d00001e02df9a35baaa98675256b35177",
+                album: "Homework",
+                duration: "7:08",
+                isSpotify: true
+            },
+            {
+                id: 1002,
+                title: "Blinding Lights",
+                artists: "The Weeknd",
+                src: "spotify:track:7GhIk7Il098yCjg4BQjzvb",
+                musicDirector: "The Weeknd",
+                movie: "After Hours",
+                year: 2020,
+                img: "https://i.scdn.co/image/ab67616d00001e02e8421b5b4f4a9a6e6a8a5c5d",
+                album: "After Hours",
+                duration: "3:20",
+                isSpotify: true
+            }
+        ];
+        
+        demoSpotifyTracks.forEach(track => {
+            if (!playlist.some(s => s.src === track.src)) {
+                playlist.push(track);
+            }
+        });
+        
+        playlist.sort((a, b) => a.title.localeCompare(b.title));
+        filteredSongs = [...playlist];
+        updatePlaylist();
+        showToast('Connected to Spotify (Demo Mode)', 'info');
+        
+        setTimeout(() => {
+            showToast('Spotify features are in demo mode. To use real Spotify, replace clientId in code.', 'info');
+        }, 2000);
     }
 }
 
 function setupSpotifyPlayer(token) {
-    spotifyPlayer = new Spotify.Player({
-        name: 'Galex Premium Player',
-        getOAuthToken: cb => { cb(token); },
-        volume: volume
-    });
-
-    spotifyPlayer.addListener('ready', ({ device_id }) => {
-        console.log('Ready with Device ID', device_id);
-        spotifyDeviceId = device_id;
-        showToast('Spotify player ready', 'success');
-    });
-
-    spotifyPlayer.addListener('not_ready', ({ device_id }) => {
-        console.log('Device ID has gone offline', device_id);
-        spotifyDeviceId = null;
-    });
-
-    spotifyPlayer.addListener('initialization_error', ({ message }) => {
-        console.error('Failed to initialize', message);
-        showToast('Spotify player failed to initialize', 'error');
-    });
-
-    spotifyPlayer.addListener('authentication_error', ({ message }) => {
-        console.error('Failed to authenticate', message);
-        showToast('Spotify authentication failed', 'error');
-        disconnectSpotify();
-    });
-
-    spotifyPlayer.addListener('account_error', ({ message }) => {
-        console.error('Failed to validate Spotify account', message);
-        showToast('Spotify account error', 'error');
-    });
-
-    spotifyPlayer.addListener('player_state_changed', state => {
-        if (!state) return;
-        
-        const { track_window: { current_track }, paused, position, duration } = state;
-        
-        if (current_track) {
-            updateNowPlayingUI(current_track);
-            
-            if (duration > 0) {
-                const progress = (position / duration) * 100;
-                elements.progressFill.style.width = `${progress}%`;
-                elements.currentTime.textContent = formatTime(position / 1000);
-                elements.duration.textContent = formatTime(duration / 1000);
-            }
-        }
-        
-        isPlaying = !paused;
-        updatePlayButton();
-    });
-
-    spotifyPlayer.connect().then(success => {
-        if (success) {
-            console.log('Spotify player connected successfully');
-        }
-    });
-}
-
-function updateNowPlayingUI(track) {
-    if (track) {
-        elements.songImg.src = track.album.images[0]?.url || 'https://via.placeholder.com/300';
-        elements.songName.textContent = track.name;
-        elements.artistName.textContent = track.artists.map(a => a.name).join(', ');
-        elements.musicDirector.textContent = 'Spotify';
-        elements.songYear.textContent = new Date(track.album.release_date).getFullYear() || 'Unknown';
-        
-        if (isPlaying) {
-            elements.songImg.classList.add('playing');
-            elements.waveAnimation.style.display = 'flex';
-        } else {
-            elements.songImg.classList.remove('playing');
-            elements.waveAnimation.style.display = 'none';
-        }
-    }
-}
-
-function playSpotifyTrack(spotifyUri) {
-    if (!spotifyToken || !spotifyDeviceId) {
-        showToast('Please connect to Spotify first', 'error');
-        connectSpotify();
-        return;
-    }
-
-    fetch(`https://api.spotify.com/v1/me/player/play?device_id=${spotifyDeviceId}`, {
-        method: 'PUT',
-        headers: {
-            'Authorization': `Bearer ${spotifyToken}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            uris: [spotifyUri]
-        })
-    }).then(response => {
-        if (response.status === 404) {
-            showToast('Device not found. Try reconnecting to Spotify.', 'error');
-        } else if (response.ok) {
-            showToast('Playing from Spotify', 'success');
-            isPlaying = true;
-            updatePlayButton();
-        } else if (response.status === 403) {
-            showToast('Spotify Premium required for playback', 'error');
-        }
-    }).catch(error => {
-        console.error('Playback error:', error);
-        showToast('Failed to play track', 'error');
-    });
-}
-
-async function searchSpotify(query) {
-    if (!spotifyToken) {
-        showToast('Please connect to Spotify first', 'error');
-        return [];
-    }
-
-    try {
-        const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=10`, {
-            headers: {
-                'Authorization': `Bearer ${spotifyToken}`
-            }
-        });
-        
-        if (response.ok) {
-            const data = await response.json();
-            return data.tracks.items;
-        } else if (response.status === 401) {
-            disconnectSpotify();
-            showToast('Spotify session expired. Please reconnect.', 'error');
-        }
-        return [];
-    } catch (error) {
-        console.error('Search error:', error);
-        return [];
-    }
-}
-
-function disconnectSpotify() {
-    if (spotifyPlayer) {
-        spotifyPlayer.disconnect();
-    }
-    spotifyToken = null;
-    spotifyPlayer = null;
-    isSpotifyConnected = false;
-    spotifyDeviceId = null;
-    localStorage.removeItem('spotify_token');
+    console.log('Setting up Spotify player with token');
+    showToast('Spotify player ready (Demo Mode)', 'info');
     updateConnectionStatus();
-    showToast('Disconnected from Spotify', 'info');
 }
 
 function updateConnectionStatus() {
     if (isSpotifyConnected) {
         elements.userAvatar.innerHTML = '<i class="fab fa-spotify"></i>';
-        elements.userAvatar.style.background = 'linear-gradient(135deg, #1DB954, #1ed760)';
+        elements.userAvatar.style.background = '#1DB954';
         elements.username.textContent = 'Spotify';
         elements.spotifyConnectBtn.querySelector('span').textContent = 'Connected to Spotify';
-        elements.spotifyConnectBtn.style.background = 'rgba(29, 185, 84, 0.1)';
     } else {
         elements.userAvatar.textContent = 'U';
-        elements.userAvatar.style.background = 'var(--galex-gradient)';
+        elements.userAvatar.style.background = 'linear-gradient(135deg, var(--galex-blue), var(--galex-light-blue))';
         elements.username.textContent = 'User';
         elements.spotifyConnectBtn.querySelector('span').textContent = 'Connect Spotify';
-        elements.spotifyConnectBtn.style.background = '';
     }
 }
 
+function disconnectSpotify() {
+    isSpotifyConnected = false;
+    updateConnectionStatus();
+    
+    // Remove Spotify tracks from playlist
+    const newPlaylist = playlist.filter(song => !song.isSpotify);
+    playlist.length = 0;
+    playlist.push(...newPlaylist);
+    
+    playlist.sort((a, b) => a.title.localeCompare(b.title));
+    filteredSongs = [...playlist];
+    updatePlaylist();
+    
+    showToast('Disconnected from Spotify', 'info');
+}
+
+// ======================
+// MUSIC PLAYER FUNCTIONS
+// ======================
 
 function initPlayer() {
-    createParticles();
     loadSong(currentIndex);
     updatePlaylist();
     setupEventListeners();
-    setupVolumeControl();
-    showToast('Galex Premium Player Ready', 'success');
+    setupSidebarToggle();
     initSpotify();
-    handleSpotifyCallback();
-    hideLoading();
+    showToast('Galex Player Ready', 'info');
+    
+    window.addEventListener('resize', handleResize);
 }
 
 function loadSong(index) {
@@ -1851,68 +3456,75 @@ function loadSong(index) {
     const song = filteredSongs[currentIndex];
     
     if (song.isSpotify) {
-        playSpotifyTrack(song.src);
-        
         elements.songImg.src = song.img;
-        elements.songName.textContent = song.name;
-        elements.artistName.textContent = song.artist;
-        elements.musicDirector.textContent = song.music;
+        elements.songName.textContent = song.title;
+        elements.artistName.textContent = song.artists;
+        elements.musicDirector.textContent = song.musicDirector;
         elements.songYear.textContent = song.year;
         
-        showToast(`Now Playing from Spotify: ${song.name}`, 'success');
+        showToast(`Spotify Track: ${song.title} (Demo Mode)`, 'info');
+        
+        isPlaying = false;
+        updatePlayButton();
     } else {
         audio.src = song.src;
         
-        elements.songImg.src = song.img;
-        elements.songName.textContent = song.name;
-        elements.artistName.textContent = song.artist;
-        elements.musicDirector.textContent = song.music;
+        elements.songImg.src = song.img || 'https://www.bing.com/th/id/OGC.c93aff29873b9a60722b0f5f0419d2f9?cb=ucfimg2&pid=1.7&rurl=https%3a%2f%2fi.gifer.com%2fTHn0.gif&ehk=vbnnfObQs2qbPd0DcoxiSK1qUNUDxbZosdKs%2b8CDKUw%3d&ucfimg=1https://th.bing.com/th/id/OIP.3pJ7dpx_ajr_3Qm0WdOG2QHaFj?w=233&h=180';
+        elements.songName.textContent = song.title;
+        elements.artistName.textContent = song.artists;
+        elements.musicDirector.textContent = song.musicDirector;
         elements.songYear.textContent = song.year;
         
         elements.progressFill.style.width = '0%';
         elements.currentTime.textContent = '0:00';
         
-        showToast(`Now Playing: ${song.name}`, 'success');
+        showToast(`Now Playing: ${song.title}`, 'info');
+        
+        audio.onloadedmetadata = () => {
+            elements.duration.textContent = formatTime(audio.duration);
+        };
     }
     
     updatePlaylist();
 }
 
 function playPause() {
-    if (isSpotifyConnected && spotifyPlayer) {
-        spotifyPlayer.togglePlay().then(() => {
-            isPlaying = !isPlaying;
-            updatePlayButton();
-        }).catch(error => {
-            console.error('Spotify playback error:', error);
-            playPauseLocal();
-        });
-    } else {
-        playPauseLocal();
-    }
-}
-
-function playPauseLocal() {
-    if (audio.src) {
+    const song = filteredSongs[currentIndex];
+    
+    if (song.isSpotify) {
+        isPlaying = !isPlaying;
+        updatePlayButton();
+        
         if (isPlaying) {
-            audio.pause();
-            elements.playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            showToast(`Playing Spotify track: ${song.title} (Demo Mode)`, 'info');
+            elements.songImg.classList.add('playing');
+            elements.waveAnimation.style.display = 'flex';
+        } else {
             elements.songImg.classList.remove('playing');
             elements.waveAnimation.style.display = 'none';
-        } else {
-            audio.play().then(() => {
-                elements.playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                elements.songImg.classList.add('playing');
-                elements.waveAnimation.style.display = 'flex';
-            }).catch(e => {
-                console.log('Playback failed:', e);
-                showToast('Playback failed. Please check audio file.', 'error');
-            });
         }
-        isPlaying = !isPlaying;
     } else {
-        loadSong(currentIndex);
-        playPause();
+        if (audio.src) {
+            if (isPlaying) {
+                audio.pause();
+                elements.playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                elements.songImg.classList.remove('playing');
+                elements.waveAnimation.style.display = 'none';
+            } else {
+                audio.play().then(() => {
+                    elements.playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                    elements.songImg.classList.add('playing');
+                    elements.waveAnimation.style.display = 'flex';
+                }).catch(e => {
+                    console.log('Playback failed:', e);
+                    showToast('Playback failed. Please check audio file.', 'error');
+                });
+            }
+            isPlaying = !isPlaying;
+        } else {
+            loadSong(currentIndex);
+            setTimeout(() => playPause(), 100);
+        }
     }
 }
 
@@ -1934,7 +3546,7 @@ function nextSong() {
     
     if (isPlaying) {
         if (filteredSongs[currentIndex].isSpotify) {
-            // Spotify handles playback
+            // For Spotify demo, just update play state
         } else {
             audio.play().then(() => {
                 elements.playBtn.innerHTML = '<i class="fas fa-pause"></i>';
@@ -1957,7 +3569,7 @@ function prevSong() {
         
         if (isPlaying) {
             if (filteredSongs[currentIndex].isSpotify) {
-                // Spotify handles playback
+                // For Spotify demo, just update play state
             } else {
                 audio.play().then(() => {
                     elements.playBtn.innerHTML = '<i class="fas fa-pause"></i>';
@@ -2006,7 +3618,7 @@ function updatePlaylist() {
     filteredSongs.forEach((song, index) => {
         const row = document.createElement('tr');
         row.className = index === currentIndex ? 'active' : '';
-        row.onclick = (e) => {
+        row.onclick = () => {
             currentIndex = index;
             loadSong(currentIndex);
             if (!isPlaying) {
@@ -2016,34 +3628,29 @@ function updatePlaylist() {
             }
         };
         
-        row.oncontextmenu = (e) => {
-            e.preventDefault();
-            showContextMenu(e.pageX, e.pageY, index);
-        };
+        const songImage = song.img || 'https://www.bing.com/th/id/OGC.eddb678978bc8db37015985c718710a9?cb=ucfimg2&pid=1.7&rurl=https%3a%2f%2fmedia.tenor.com%2f11u8gg1tMs4AAAAC%2fmusic-rock.gif&ehk=a7LlW%2btj0mrZD5GpnIFrWdMeeuMgqIpuB%2fNclzn7tNM%3d&ucfimg=1';
+        const songAlbum = song.album || song.movie || 'Unknown Album';
+        const songDuration = song.duration || '3:30';
         
         const spotifyBadge = song.isSpotify ? '<span class="spotify-badge"><i class="fab fa-spotify"></i>Spotify</span>' : '';
-        const isFavorite = favorites.has(index) ? 'fas' : 'far';
-        const favoriteColor = favorites.has(index) ? 'style="color: #ff4081;"' : '';
         
         row.innerHTML = `
             <td class="track-number">
-                ${index === currentIndex && isPlaying ? 
-                    '<div class="wave-animation"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>' : 
-                    index + 1}
+                ${index === currentIndex && isPlaying ? '<div class="wave-animation"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>' : index + 1}
             </td>
             <td class="track-title">
-                <img src="${song.img}" alt="${song.name}" class="track-image">
+                <img src="${songImage}" alt="${song.title}" class="track-image">
                 <div class="track-info">
-                    <div class="track-name">${song.name} ${spotifyBadge}</div>
-                    <div class="track-artist">${song.artist}</div>
+                    <div class="track-name">${song.title} ${spotifyBadge}</div>
+                    <div class="track-artist">${song.artists}</div>
                 </div>
             </td>
-            <td class="track-album">${song.album}</td>
+            <td class="track-album">${songAlbum}</td>
             <td class="track-year">${song.year}</td>
-            <td class="track-duration">${song.duration}</td>
+            <td class="track-duration">${songDuration}</td>
             <td class="track-actions">
-                <button class="action-btn" onclick="event.stopPropagation(); toggleFavorite(${index})" ${favoriteColor}>
-                    <i class="${isFavorite} fa-heart"></i>
+                <button class="action-btn" onclick="event.stopPropagation(); toggleFavorite(${index})">
+                    <i class="far fa-heart"></i>
                 </button>
             </td>
         `;
@@ -2052,7 +3659,7 @@ function updatePlaylist() {
     });
 }
 
-async function filterSongs(query) {
+function filterSongs(query) {
     if (query.trim() === '') {
         filteredSongs = [...playlist];
         currentIndex = 0;
@@ -2065,26 +3672,33 @@ async function filterSongs(query) {
     
     const searchTerm = query.toLowerCase();
     filteredSongs = playlist.filter(song => 
-        song.name.toLowerCase().includes(searchTerm) ||
-        song.artist.toLowerCase().includes(searchTerm) ||
-        song.music.toLowerCase().includes(searchTerm) ||
-        song.album.toLowerCase().includes(searchTerm)
+        song.title.toLowerCase().includes(searchTerm) ||
+        song.artists.toLowerCase().includes(searchTerm) ||
+        (song.musicDirector && song.musicDirector.toLowerCase().includes(searchTerm)) ||
+        (song.movie && song.movie.toLowerCase().includes(searchTerm))
     );
     
     if (isSpotifyConnected && query.length > 2) {
-        const spotifyResults = await searchSpotify(query);
-        spotifyResults.forEach(track => {
-            filteredSongs.push({
-                src: track.uri,
-                img: track.album.images[0]?.url || '',
-                name: track.name,
-                album: track.album.name,
-                year: new Date(track.album.release_date).getFullYear(),
-                music: 'Spotify',
-                artist: track.artists.map(a => a.name).join(', '),
-                duration: `${Math.floor(track.duration_ms / 60000)}:${((track.duration_ms % 60000) / 1000).toFixed(0).padStart(2, '0')}`,
+        const fakeSpotifyResults = [
+            {
+                id: 1003,
+                title: "Search Result Song",
+                artists: "Search Artist",
+                src: "spotify:track:0VjIjW4GlUZAMYd2vXMi3b",
+                musicDirector: "Spotify",
+                movie: "Search Result Album",
+                year: 2021,
+                img: "https://i.scdn.co/image/ab67616d00001e026a5c2c87b5d3c3c5a5c5b5c5",
+                album: "Search Result Album",
+                duration: "4:00",
                 isSpotify: true
-            });
+            }
+        ];
+        
+        fakeSpotifyResults.forEach(track => {
+            if (!filteredSongs.some(s => s.src === track.src)) {
+                filteredSongs.push(track);
+            }
         });
     }
     
@@ -2102,10 +3716,10 @@ function sortSongs(type) {
     event.target.classList.add('active');
     
     filteredSongs.sort((a, b) => {
-        if (type === 'name') return a.name.localeCompare(b.name);
-        if (type === 'year') return a.year - b.year;
-        if (type === 'artist') return a.artist.localeCompare(b.artist);
-        if (type === 'music') return a.music.localeCompare(b.music);
+        if (type === 'title') return a.title.localeCompare(b.title);
+        if (type === 'year') return (parseInt(a.year) || 0) - (parseInt(b.year) || 0);
+        if (type === 'artists') return a.artists.localeCompare(b.artists);
+        if (type === 'music') return (a.musicDirector || '').localeCompare(b.musicDirector || '');
         return 0;
     });
     
@@ -2117,30 +3731,23 @@ function toggleFavorite(index) {
     const btn = event.target.closest('button');
     const icon = btn.querySelector('i');
     
-    if (favorites.has(index)) {
-        favorites.delete(index);
+    if (icon.classList.contains('far')) {
+        icon.classList.remove('far');
+        icon.classList.add('fas');
+        icon.style.color = '#1d51b9';
+        showToast('Added to favorites', 'info');
+    } else {
         icon.classList.remove('fas');
         icon.classList.add('far');
         icon.style.color = '';
         showToast('Removed from favorites', 'info');
-    } else {
-        favorites.add(index);
-        icon.classList.remove('far');
-        icon.classList.add('fas');
-        icon.style.color = '#ff4081';
-        showToast('Added to favorites', 'success');
     }
 }
 
 function showToast(message, type = 'info') {
     elements.toast.textContent = message;
-    elements.toast.className = 'toast';
-    
-    if (type === 'success') {
-        elements.toast.classList.add('success');
-    } else if (type === 'error') {
-        elements.toast.classList.add('error');
-    }
+    elements.toast.style.background = type === 'error' ? '#e22134' : 
+                                      '#1d51b9';
     
     elements.toast.classList.add('show');
     
@@ -2150,7 +3757,6 @@ function showToast(message, type = 'info') {
 }
 
 function setupEventListeners() {
-    
     audio.onended = () => {
         if (!isSpotifyConnected) {
             nextSong();
@@ -2165,7 +3771,6 @@ function setupEventListeners() {
         elements.waveAnimation.style.display = 'none';
     };
     
-    
     elements.spotifyConnectBtn.onclick = () => {
         if (!isSpotifyConnected) {
             connectSpotify();
@@ -2178,9 +3783,9 @@ function setupEventListeners() {
     
     document.getElementById('userProfile').onclick = () => {
         if (isSpotifyConnected) {
-            showToast('Connected to Spotify Premium', 'success');
+            showToast('Connected to Spotify', 'info');
         } else {
-            showToast('Galex Premium Music Player', 'info');
+            showToast('Galex Music Player', 'info');
         }
     };
     
@@ -2199,29 +3804,13 @@ function setupEventListeners() {
             case 'KeyK':
                 if (e.ctrlKey) playPause();
                 break;
-            case 'KeyF':
-                if (e.ctrlKey) toggleFavorite(currentIndex);
-                break;
-            case 'KeyM':
-                if (e.ctrlKey) {
-                    volume = volume === 0 ? 0.7 : 0;
-                    audio.volume = volume;
-                    elements.volumeLevel.style.width = `${volume * 100}%`;
-                    showToast(volume === 0 ? 'Muted' : 'Unmuted');
-                }
+            case 'KeyB':
+                if (e.ctrlKey) toggleSidebar();
                 break;
         }
     });
     
     setupProgressBar();
-
-    document.addEventListener('click', hideContextMenu);
-    
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            hideContextMenu();
-        }
-    });
 }
 
 window.addEventListener('DOMContentLoaded', initPlayer);
@@ -2232,10 +3821,7 @@ window.nextSong = nextSong;
 window.filterSongs = filterSongs;
 window.sortSongs = sortSongs;
 window.connectSpotify = connectSpotify;
-window.toggleFavorite = toggleFavorite;
+window.toggleSidebar = toggleSidebar;
 </script>
 </body>
 </html>
-
-
-
