@@ -34,6 +34,52 @@ body {
     overflow: hidden;
 }
 
+/* LOADER FULLSCREEN */
+#loader{
+    position:fixed;
+    inset:0;
+    background:#000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    transition: 0.5s;
+}
+
+/* LOGO */
+.logo{
+    width:120px;
+    animation:zoom 1.5s ease infinite alternate;
+}
+
+/* SPINNER */
+.spinner{
+    width:35px;
+    height:35px;
+    border:4px solid #444;
+    border-top:4px solid #1d51b9;
+    border-radius:50%;
+    display: none;
+    margin:20px auto 0;
+    animation:spin 1s linear infinite;
+}
+
+/* ANIMATIONS */
+@keyframes spin{
+    100%{transform:rotate(360deg);}
+}
+
+@keyframes zoom{
+    from{transform:scale(0.9); opacity:0.7;}
+    to{transform:scale(1.05); opacity:1;}
+}
+
+/* HIDE MAIN CONTENT INITIALLY */
+.hidden{
+    display:none;
+}
+
+
 /* Background Effects */
 .background-gradient {
     position: fixed;
@@ -784,6 +830,17 @@ body {
 <div class="background-pattern"></div>
 <div class="mobile-overlay" id="mobileOverlay"></div>
 
+<!-- LOADING SCREEN -->
+<div id="loader">
+    <div class="logo-box">
+        <img src="logo.png" class="logo">
+        <div class="spinner"></div>
+    </div>
+</div>
+
+<!-- MAIN WEBSITE -->
+<div id="app" class="hidden">
+    <!-- Your website content -->
 <div class="app-container">
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
@@ -940,7 +997,7 @@ body {
 
 <!-- Toast Notification -->
 <div class="toast" id="toast"></div>
-
+</div>
 <script>
 
 const playlist = [
@@ -3814,6 +3871,22 @@ function setupEventListeners() {
     setupProgressBar();
 }
 
+window.addEventListener("load", () => {
+    const loader = document.getElementById("loader");
+    const app = document.getElementById("app");
+
+    setTimeout(() => {
+        loader.style.opacity = "0";
+        loader.style.pointerEvents = "none";
+
+        setTimeout(() => {
+            loader.style.display = "none";
+            app.classList.remove("hidden");
+        }, 500);
+
+    }, 2000); // loading duration
+});
+
 window.addEventListener('DOMContentLoaded', initPlayer);
 
 window.playPause = playPause;
@@ -3826,4 +3899,3 @@ window.toggleSidebar = toggleSidebar;
 </script>
 </body>
 </html>
-
